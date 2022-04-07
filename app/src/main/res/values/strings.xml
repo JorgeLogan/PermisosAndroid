@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GestionPermisos001</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="selec_galeria">Selecciona archivo desde la galería</string>
+    <string name="selec_www">Selecciona archivo desde internet</string>
+    <string name="selec_sd">Selecciona archivo desde la tarjeta SD</string>
+    <string name="imagen">Imagen</string>
+    <string name="video">Video</string>
+    <string name="sonido">Sonido</string>
 </resources>
