@@ -21,11 +21,11 @@
 
     <!-- Para el Frame movil que aloja imagen, video o sonido -->
     <FrameLayout
+        android:id="@+id/contenedorFragments"
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_gravity="center"
-        android:id="@+id/contenedorFragments"
-        android:background="@color/purple_200"/>
+        android:background="@color/black" />
 
     <Space
         android:layout_width="0dp"

@@ -27,22 +27,6 @@ public class FragmentOrigen extends Fragment {
         this.interfazFragments = interfazFragments;
     }
 
-
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-
-     * @return A new instance of fragment FragmentOrigen.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FragmentOrigen newInstance(String param1, String param2) {
-        FragmentOrigen fragment = new FragmentOrigen();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

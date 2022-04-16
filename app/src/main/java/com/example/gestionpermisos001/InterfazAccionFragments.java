@@ -4,4 +4,5 @@ import android.net.Uri;
 
 public interface InterfazAccionFragments {
     public void setArchivo(Uri uri);
+    public void cerrarFragment();
 }

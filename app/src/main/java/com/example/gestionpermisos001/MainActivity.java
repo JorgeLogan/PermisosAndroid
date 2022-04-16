@@ -11,11 +11,15 @@ import android.app.Fragment;
 import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.PermissionInfo;
 import android.media.MediaActionSound;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -23,15 +27,28 @@ import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.File;
 import java.net.ConnectException;
+
+import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
  * Solo vamos a tener 1 actividad de momento, asi que de entrada, vamos a tener por defecto
  * el Fragment de imagen cargado.
  * Luego según los controles del mando, el fragment central se irá cambiando a video, sonido, o
  * vuelta a imagen segun el boton pulsado.
+ * Debajo de
  */
 public class MainActivity extends AppCompatActivity implements  InterfazFragments{
+
+    final int PERMISO_GALERIA = 4;
+    final int PERMISO_CAMINO = 1;
+    final int PERMISO_LECTURA = 13;
+    final int PERMISO_CAMARA = 11;
+
+    final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,  Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
     private int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido
 
@@ -40,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
     /**
      *  Para almacenar los 3 fragments creo un listado, donde
-     *  0 = imgaen
+     *  0 = imagen
      *  1 = video
      *  2 = sonido
      */
@@ -61,66 +78,104 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         this.listadoFragmentos[1] = new FragVideo();
         this.listadoFragmentos[2] = new FragSonido();
 
-
-
-
-
-
-
-
-        // COmpruebo permisos
-        String[] permisos = { Manifest.permission.READ_CONTACTS };
-
-
-
-
-
-
-
-
+        // Cargamos el fragment inicial, de cargar imagenes
         this.cargarFragment();
     }
 
+    /***************************************************************************************
+     *   Comprobar permisos runtime
+     * *************************************************************************************
+     */
 
+    public void pedirPermisosGaleria(){
+        if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this, this.PERMISOS, this.PERMISO_GALERIA );
+        }
+    }
 
-    /************************************************************************************
+    public void pedirPermisosSD(){
+        if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(MainActivity.this, PERMISOS, this.PERMISO_CAMINO);
+        }
+    }
+
+    /*********************************************************************************************
      * Implementaciones de la interfaz
+     * ********************************************************************************************
+     */
+    /**
+     * Funcion para cargar el fragment central de elegir imagenes
      */
     @Override
     public void seleccionarImagen() {
+        if(this.eleccion == 0) return; // Si ya estamos en la seleccion, no hacemos nada
+
+        // Primero cerramos el fragment actual
+        ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).cerrarFragment();
+
+        // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 0;
         Log.d("Pruebas", "Abrir imagen. Eleccion actual: " + this.eleccion);
         Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
+    /**
+     * Funcion para cargar el fragment central de video
+     */
     @Override
     public void seleccionaVideo() {
+        if(this.eleccion == 1) return; // Si ya estamos en la seleccion, no hacemos nada
+
+        // Primero cerramos el fragment actual
+        ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).cerrarFragment();
+
+        // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 1;
         Log.d("Pruebas", "Abrir Video. Eleccion actual: " + this.eleccion);
         Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
+    /**
+     * Funcion para cargar el fragment central de sonido
+     */
     @Override
     public void seleccionarSonido() {
+        if(this.eleccion == 2) return; // Si ya estamos en la seleccion, no hacemos nada
+
+        // Primero cerramos el fragment actual
+        ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).cerrarFragment();
+
+        // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 2;
         Log.d("Pruebas", "Abrir Sonido. Eleccion actual: " + this.eleccion);
         Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
+    /*****************************************************************************************
+     *  Funciones de seleccion de origen de datos
+     * ***************************************************************************************
+     */
+    /**
+     * Funcion para seleccionar desde la galeria
+     */
     @Override
     public void abrirGaleria() {
         Log.d("Pruebas", "Abrir galeria");
+
+        // Por si es necesario, convocamos la funcion de pedir permisos runtime
+        // (si no lo necesita no los pedira)
+        this.pedirPermisosGaleria();
 
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
          */
         switch(this.eleccion){
-            case 0: // Imagen
-                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                //intentImagen.setType("image/");
+            case 0: // Imagen desde Almacenamiento interno
+                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                intentImagen.setType("image/");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
             case 1: // Video
@@ -136,26 +191,36 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         }
     }
 
+    /**
+     * Funcion para seleccionar desde internet
+     */
     @Override
     public void abrirWWW() {
-        Log.d("Pruebas", "Abrir internet");
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
          */
+
+        String ruta ="";
+
         switch(this.eleccion){
             case 0: // Imagen
-                String ruta = "https://www.educaciontrespuntocero.com/wp-content/uploads/2019/02/girasoles-978x652.jpg.webp";
+                Log.d("Pruebas", "Abrir imagen de internet");
+                ruta = "https://imagenpng.com/wp-content/uploads/2015/09/imagenes-png.png";
+
                 ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(ruta));
+
                 break;
             case 1: // Video
-                Intent intentVideo = new Intent(Intent.ACTION_PICK);
-                intentVideo.setType("video/");
-                startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
+                Log.d("Pruebas", "Abrir video de internet");
+                ruta = "https://github.com/JorgeLogan/MisCosas/blob/main/LadyPirataIntroReel.mp4";
+                //ruta = "http://techslides.com/demos/sample-videos/small.mp4";
+                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(ruta));
                 break;
             case 2: // Sonido
-                Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                intentSonido.setType("audio/mp3");
-                startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
+                String rutaSonido = "https://wynk.in/u/1wzgcDky5";
+                Uri uri = Uri.parse(rutaSonido);
+                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(rutaSonido));
+
                 break;
         }
     }
@@ -166,18 +231,27 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
          */
+        this.pedirPermisosSD();
+
         switch(this.eleccion){
-            case 0: // Imagen
-                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                intentImagen.setType("image/jpg");
+            case 0: // Imagen desde sd
+                Intent intentImagen = null;
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+                }else{
+                    intentImagen = new Intent(Intent.ACTION_GET_CONTENT);
+                }
+
+                intentImagen.setType("image/*");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
-            case 1: // Video
+            case 1: // Video desde la galeria
                 Intent intentVideo = new Intent(Intent.ACTION_PICK);
                 intentVideo.setType("video/");
                 startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
                 break;
-            case 2: // Sonido
+            case 2: // Sonido desde la galeria
                 Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
                 intentSonido.setType("audio/mp3");
                 startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
@@ -206,6 +280,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     Para cargar el fragment de Imagenes
      */
     private void cargarFragment(){
+        // Ahora ya preparamos para cargar el nuevo fragment
         FragmentManager manejadorFragments =  getFragmentManager();
         FragmentTransaction transaccion = manejadorFragments.beginTransaction();
         transaccion.replace(R.id.contenedorFragments, this.listadoFragmentos[this.eleccion]);

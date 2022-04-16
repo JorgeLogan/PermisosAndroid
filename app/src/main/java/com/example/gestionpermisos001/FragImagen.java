@@ -1,15 +1,28 @@
 package com.example.gestionpermisos001;
 
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
 import android.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+
+import com.bumptech.glide.Glide;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class FragImagen extends Fragment implements InterfazAccionFragments {
@@ -41,12 +54,43 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         View vista =  inflater.inflate(R.layout.fragment_frag_imagen, container, false);
 
         this.imgSalida = (ImageView)vista.findViewById(R.id.imgSalida);
+
+        // En el inicio, carga la imagen desde recursos
+        this.imgSalida.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.raw.warnerbrospresents));
+
         return vista;
     }
 
 
     @Override
     public void setArchivo(Uri uri) {
-        this.imgSalida.setImageURI(uri);
+        Log.d("Pruebas", "Intento cargar la imagen  " + uri.toString());
+        Bitmap bmp = null;
+        try
+        {
+            if(uri.toString().contains("http")){
+                Toast.makeText(getActivity().getBaseContext(), "Imagen desde internet", Toast.LENGTH_LONG).show();
+                Glide.with(getActivity().getBaseContext()).load(uri).into(this.imgSalida);
+            }
+            else{
+                this.imgSalida.setImageURI(uri);
+                this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            }
+        }
+        catch (Exception e) {
+            Log.d("Pruebas", "Error sin descripcion");
+        }
+    }
+
+    @Override
+    public void cerrarFragment() {
+        // No necesita nada
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d("Pruebas", "Busqueda de permisos override onRequestPermissionsResult");
     }
 }

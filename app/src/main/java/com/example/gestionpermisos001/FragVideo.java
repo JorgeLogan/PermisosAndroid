@@ -24,7 +24,8 @@ import androidx.appcompat.widget.ViewUtils;
 public class FragVideo extends Fragment implements InterfazAccionFragments{
 
     VideoView vidSalida;
-    MediaController controlador;
+    MediaController mc = null;
+
     public FragVideo() {
         // Required empty public constructor
     }
@@ -48,22 +49,37 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         View vista =  inflater.inflate(R.layout.fragment_video, container, false);
 
         this.vidSalida = (VideoView)vista.findViewById(R.id.vidSalida);
-        this.vidSalida.setVideoPath("android.resource://" + getResources().getResourcePackageName(R.raw.mi_reel)
-                + "/raw/" + getResources().getResourceName(R.raw.mi_reel));
+
+        // Cargara el video de recursos al iniciar
+        String paquete = getActivity().getPackageName();
+
+        this.vidSalida.setMediaController(new MediaController(getActivity().getBaseContext()));
+        this.vidSalida.setVideoPath("android.resource://" + paquete + "/" + R.raw.mi_reel);
+        this.vidSalida.requestFocus();
+        this.vidSalida.start();
+
+        // Devolvemos la vista
         return vista;
     }
 
     @Override
     public void setArchivo(Uri uri) {
         try{
+            if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();
+            this.vidSalida.resume();
+            this.vidSalida.setVideoPath("");
             this.vidSalida.setVideoURI(uri);
             this.vidSalida.requestFocus();
             this.vidSalida.start();
+            Toast.makeText(getActivity().getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
 
         }catch(Exception e){
             Toast.makeText(getActivity().getBaseContext(), "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+    }
 
-        Toast.makeText(getActivity().getBaseContext(), "Supuestamente abre video  " + uri, Toast.LENGTH_SHORT).show();
+    @Override
+    public void cerrarFragment() {
+        Toast.makeText(getActivity().getBaseContext(), "Cerrando fragment de video", Toast.LENGTH_LONG).show();
     }
 }
