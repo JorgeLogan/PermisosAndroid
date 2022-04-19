@@ -5,12 +5,14 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
+    android:background="#00FFFFFF"
     tools:context=".FragSonido">
 
     <ImageView
         android:id="@+id/imgSonido"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="#00FFFFFF"
         android:scaleType="fitXY"
         android:src="@drawable/item_audio" />
 </FrameLayout>

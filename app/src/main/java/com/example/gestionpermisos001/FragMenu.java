@@ -59,6 +59,9 @@ public class FragMenu extends Fragment {
         imgImagen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgImagen.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_encendida));
+                imgSonido.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
+                imgVideo.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
                 ((InterfazFragments)getActivity()).seleccionarImagen();
             }
         });
@@ -66,6 +69,9 @@ public class FragMenu extends Fragment {
         imgVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgImagen.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
+                imgSonido.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
+                imgVideo.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_encendida));
                 ((InterfazFragments)getActivity()).seleccionaVideo();
             }
         });
@@ -73,6 +79,9 @@ public class FragMenu extends Fragment {
         imgSonido.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                imgImagen.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
+                imgSonido.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_encendida));
+                imgVideo.setBackground(getResources().getDrawable(R.drawable.forma_redondeada_apagada));
                 ((InterfazFragments)getActivity()).seleccionarSonido();
             }
         });

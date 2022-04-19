@@ -9,35 +9,40 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/itemCamara"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:background="@drawable/forma_redondeada_encendida"
             android:scaleType="fitXY"
-            android:src="@drawable/item_camara"
-            android:id="@+id/itemCamara"/>
+            android:src="@drawable/item_camara" />
 
         <Space
             android:layout_width="20dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/itemWWW"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:background="@drawable/forma_redondeada_apagada"
             android:scaleType="fitXY"
             android:src="@drawable/item_video" />
 
         <Space
             android:layout_width="20dp"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <ImageButton
             android:id="@+id/itemSD"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:background="@drawable/forma_redondeada_apagada"
             android:scaleType="fitXY"
             android:src="@drawable/item_audio" />
 
