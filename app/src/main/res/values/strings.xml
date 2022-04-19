@@ -9,4 +9,13 @@
     <string name="imagen">Imagen</string>
     <string name="video">Video</string>
     <string name="sonido">Sonido</string>
+    <string name="genial">Genial !</string>
+    <string name="volver">Volver</string>
+    <string name="lista_contactos">Lista de contactos</string>
+    <string name="acerca_de">Acerca de...</string>
+    <string name="salir">Salir</string>
+    <string name="llamar">Llamar</string>
+    <string name="colgar">Colgar</string>
+    <string name="nombre">Nombre</string>
+    <string name="telefono">Teléfono</string>
 </resources>

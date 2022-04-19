@@ -1,17 +1,21 @@
 package com.example.gestionpermisos001;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 //import androidx.fragment.app.Fragment;
 
+import android.app.AlertDialog;
+import android.app.Application;
 import android.app.Fragment;
 
 import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
@@ -22,6 +26,9 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -48,7 +55,9 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     final int PERMISO_LECTURA = 13;
     final int PERMISO_CAMARA = 11;
 
-    final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,  Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
+    final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
     private int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido
 
@@ -103,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      * Implementaciones de la interfaz
      * ********************************************************************************************
      */
-    /**
+    /**********************************************************************************************
      * Funcion para cargar el fragment central de elegir imagenes
      */
     @Override
@@ -120,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         this.cargarFragment();
     }
 
-    /**
+    /**********************************************************************************************
      * Funcion para cargar el fragment central de video
      */
     @Override
@@ -137,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         this.cargarFragment();
     }
 
-    /**
+    /**********************************************************************************************
      * Funcion para cargar el fragment central de sonido
      */
     @Override
@@ -158,8 +167,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      *  Funciones de seleccion de origen de datos
      * ***************************************************************************************
      */
-    /**
-     * Funcion para seleccionar desde la galeria
+    /**********************************************************************************************
+     * Funcion para seleccionar elementos desde la galeria interna
      */
     @Override
     public void abrirGaleria() {
@@ -171,6 +180,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
+         * Ahora segun el valor de eleccion, sabremos si tenemos que abrir una imagen, un video o un sonido
+         * Como lo buscara del almacenamiento interno, usaremos un Intent para buscar
          */
         switch(this.eleccion){
             case 0: // Imagen desde Almacenamiento interno
@@ -178,20 +189,20 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 intentImagen.setType("image/");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
-            case 1: // Video
-                Intent intentVideo = new Intent(Intent.ACTION_PICK);
-                intentVideo.setType("video/");
+            case 1: // Video desde almacenamiento interno
+                Intent intentVideo = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI);
+                intentVideo.setType("video/mp4");
                 startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
                 break;
-            case 2: // Sonido
-                Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+            case 2: // Sonido desde el almacenamiento interno
+                Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
                 intentSonido.setType("audio/mp3");
                 startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
                 break;
         }
     }
 
-    /**
+    /**********************************************************************************************
      * Funcion para seleccionar desde internet
      */
     @Override
@@ -203,28 +214,36 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         String ruta ="";
 
         switch(this.eleccion){
-            case 0: // Imagen
+            case 0: // Imagen desde Internet
                 Log.d("Pruebas", "Abrir imagen de internet");
                 ruta = "https://imagenpng.com/wp-content/uploads/2015/09/imagenes-png.png";
 
                 ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(ruta));
 
                 break;
-            case 1: // Video
+            case 1: // Video desde Internet
+                this.cargarFragment();
                 Log.d("Pruebas", "Abrir video de internet");
-                ruta = "https://github.com/JorgeLogan/MisCosas/blob/main/LadyPirataIntroReel.mp4";
-                //ruta = "http://techslides.com/demos/sample-videos/small.mp4";
-                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(ruta));
-                break;
-            case 2: // Sonido
-                String rutaSonido = "https://wynk.in/u/1wzgcDky5";
-                Uri uri = Uri.parse(rutaSonido);
-                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(rutaSonido));
+                String rutaVideo = "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174";
+                //String rutaVideo = "https://github.com/JorgeLogan/MisCosas/blob/main/LadyPirataIntroReel.mp4";
+                try{
+                    ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(rutaVideo));
 
+                }catch(Exception e){
+                    Log.d("Pruebas", "Excepcion en intento de abrir video: " + e.getMessage());
+                }
+                break;
+            case 2: // Sonido desde internet
+                String rutaSonido = "https://www.freemusicprojects.com/mp3/Lluvia-1.mp3";
+                Uri uri = Uri.parse(rutaSonido);
+                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(uri);
                 break;
         }
     }
 
+    /**********************************************************************************************
+     * Funcion para seleccionar la tarjeta SD
+     */
     @Override
     public void abrirSD() {
         Log.d("Pruebas", "Abrir SD");
@@ -234,25 +253,23 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         this.pedirPermisosSD();
 
         switch(this.eleccion){
-            case 0: // Imagen desde sd
+            case 0: // Imagen desde la SD
+                Log.d("Pruebas", "Intento abrir imagen desde la galeria");
                 Intent intentImagen = null;
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
-                }else{
-                    intentImagen = new Intent(Intent.ACTION_GET_CONTENT);
-                }
-
+                File ruta = Environment.getExternalStorageDirectory();
+                intentImagen = new Intent(Intent.ACTION_PICK).setData(Uri.fromFile(ruta));
                 intentImagen.setType("image/*");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
-            case 1: // Video desde la galeria
+            case 1: // Video desde SD
                 Intent intentVideo = new Intent(Intent.ACTION_PICK);
                 intentVideo.setType("video/");
                 startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
                 break;
-            case 2: // Sonido desde la galeria
-                Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+            case 2: // Sonido desde SD
+                Intent intentSonido = new Intent(Intent.ACTION_PICK);
+                intentSonido.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
                 intentSonido.setType("audio/mp3");
                 startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
                 break;
@@ -260,15 +277,16 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     }
 
     /********************************************************************************************
-     * Para el resultado de la actividad que abrimos para cargar los archivos
+     * Para el resultado del intent que abrimos para cargar los archivos
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
-            Toast.makeText(this, "Codigo OK, salida " + data.toString(), Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Codigo OK, salida " + data.toString(), Toast.LENGTH_LONG)
                     .show();
             Uri path = data.getData();
+            Toast.makeText(this, data.getData().toString(), Toast.LENGTH_LONG).show();
             ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path);
         }else{
             Toast.makeText(this, "No se pudo realizar. Cod Requerido " + requestCode + " Codigo recibido " + resultCode, Toast.LENGTH_SHORT)
@@ -276,8 +294,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         }
     }
 
-    /*
-    Para cargar el fragment de Imagenes
+    /**********************************************************************************************
+    Para cargar el fragment central segun la eleccion
      */
     private void cargarFragment(){
         // Ahora ya preparamos para cargar el nuevo fragment
@@ -285,5 +303,57 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         FragmentTransaction transaccion = manejadorFragments.beginTransaction();
         transaccion.replace(R.id.contenedorFragments, this.listadoFragmentos[this.eleccion]);
         transaccion.commit();
+    }
+
+    /**********************************************************************************************
+     * Menu de llamadas a contactos
+     *
+     * ********************************************************************************************
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater infladorMenus = getMenuInflater();
+        infladorMenus.inflate(R.menu.menu_contactos, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()){
+            case R.id.itemContactos:
+                this.listaContactos();
+                break;
+            case R.id.itemAcercaDe:
+                this.acercaDe();
+                break;
+            case R.id.itemSalir:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Para la lista de contactos
+     */
+    private void listaContactos(){
+        Intent intent = new Intent(this, ActividadContactos.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Para un alert dialog simple con un acerca de...
+     */
+    private void acercaDe(){
+        AlertDialog.Builder dialogo =  new AlertDialog.Builder(this);
+        String mensaje = "Creado por \n\tJorge Alvarez Ceñal";
+        dialogo.setMessage(mensaje);
+        dialogo.setTitle(getResources().getString(R.string.acerca_de));
+        dialogo.setPositiveButton(R.string.genial, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) { }
+        });
+        dialogo.show();
     }
 }

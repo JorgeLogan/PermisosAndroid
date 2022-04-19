@@ -1,20 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.gestionpermisos001">
-
-    <!-- Permisos para el almacenamiento-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-
-    <!-- Permisos para acceder a la agegda de contactos -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-
-    <!-- Permisos para Internet -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
-    <!-- Permisos para modo sleeping -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Permisos para el almacenamiento -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Permisos para acceder a la agegda de contactos -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- Permisos para Internet -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permisos para modo sleeping -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -23,9 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.GestionPermisos001">
+        <activity android:name=".ActividadContactos"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import android.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +25,7 @@ import androidx.appcompat.widget.ViewUtils;
 public class FragVideo extends Fragment implements InterfazAccionFragments{
 
     VideoView vidSalida;
-    MediaController mc = null;
+//    MediaController mc = null;
 
     public FragVideo() {
         // Required empty public constructor
@@ -53,8 +54,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         // Cargara el video de recursos al iniciar
         String paquete = getActivity().getPackageName();
 
-        this.vidSalida.setMediaController(new MediaController(getActivity().getBaseContext()));
-        this.vidSalida.setVideoPath("android.resource://" + paquete + "/" + R.raw.mi_reel);
+        this.vidSalida.setVideoURI(Uri.parse("android.resource://" + paquete + "/" + R.raw.mi_reel));
         this.vidSalida.requestFocus();
         this.vidSalida.start();
 
@@ -65,9 +65,8 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
     @Override
     public void setArchivo(Uri uri) {
         try{
+            Log.d("Pruebas", "Intento cargar el video de internet: " + uri.toString());
             if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();
-            this.vidSalida.resume();
-            this.vidSalida.setVideoPath("");
             this.vidSalida.setVideoURI(uri);
             this.vidSalida.requestFocus();
             this.vidSalida.start();
@@ -75,6 +74,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
 
         }catch(Exception e){
             Toast.makeText(getActivity().getBaseContext(), "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Log.d("Pruebas", e.getMessage());
         }
     }
 
