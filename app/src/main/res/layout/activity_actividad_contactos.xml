@@ -24,7 +24,6 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:id="@+id/lvContactos"
-        android:background="@drawable/forma_redondeada_vacia"
         android:layout_marginRight="30dp"
         android:layout_marginLeft="30dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
