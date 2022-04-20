@@ -30,15 +30,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.Toast;
-import android.widget.VideoView;
-
-import com.bumptech.glide.Glide;
-
 import java.io.File;
-import java.net.ConnectException;
-
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
@@ -125,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 0;
         Log.d("Pruebas", "Abrir imagen. Eleccion actual: " + this.eleccion);
-        Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
@@ -142,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 1;
         Log.d("Pruebas", "Abrir Video. Eleccion actual: " + this.eleccion);
-        Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
@@ -159,7 +149,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 2;
         Log.d("Pruebas", "Abrir Sonido. Eleccion actual: " + this.eleccion);
-        Toast.makeText(getBaseContext(), "Eleccion: " + eleccion, Toast.LENGTH_SHORT).show();
         this.cargarFragment();
     }
 
@@ -283,14 +272,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
-            Toast.makeText(this, "Codigo OK, salida " + data.toString(), Toast.LENGTH_LONG)
-                    .show();
             Uri path = data.getData();
-            Toast.makeText(this, data.getData().toString(), Toast.LENGTH_LONG).show();
             ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path);
-        }else{
-            Toast.makeText(this, "No se pudo realizar. Cod Requerido " + requestCode + " Codigo recibido " + resultCode, Toast.LENGTH_SHORT)
-                    .show();
         }
     }
 
@@ -338,8 +321,13 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      * Para la lista de contactos
      */
     private void listaContactos(){
-        Intent intent = new Intent(this, ActividadContactos.class);
-        startActivity(intent);
+        try{
+            Intent intent = new Intent(this, ActividadContactos.class);
+            startActivity(intent);
+        }catch(Exception e){
+            Log.d("Pruebas", "-->" + e.getMessage());
+        }
+
     }
 
     /**

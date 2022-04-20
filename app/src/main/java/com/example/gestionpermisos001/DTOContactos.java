@@ -1,9 +1,11 @@
 package com.example.gestionpermisos001;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Clase para manejar la lista de contactos
  */
-public class DTOContactos {
+public class DTOContactos{
     // Atributos
     private String nombre;
     private String telefono;
@@ -32,5 +34,9 @@ public class DTOContactos {
 
     public void setTelefono(String telefono){
         this.telefono = telefono;
+    }
+
+    public void asignarDatos(DTOContactos contacto) {
+
     }
 }

@@ -2,6 +2,7 @@ package com.example.gestionpermisos001;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -17,68 +18,82 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Clase para manejar la lista de contactos
  */
 public class ActividadContactos extends AppCompatActivity {
     private int PERMISO_LEER_CONTACTOS = 100;
-    private DTOContactos[] contactos;
+    private List<DTOContactos> contactos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_actividad_contactos);
-
-        // Cargamos los elementos
-        Button btnLlamar = (Button)findViewById(R.id.btnContactosLlamar);
-        Button btnVolver = (Button)findViewById(R.id.btnContactosVolver);
-        Button btnSalir = (Button)findViewById(R.id.btnContactosSalir);
-        ListView lvContactos = (ListView)findViewById(R.id.lvContactos);
-
-        // Comprobamos si tenemos permisos para mirar las llamadas
-        this.comprobarPermisosLlamada();
 
         try{
+            setContentView(R.layout.activity_actividad_contactos);
+
+            // Cargamos los elementos
+            Button btnLlamar = (Button)findViewById(R.id.btnContactosLlamar);
+            Button btnVolver = (Button)findViewById(R.id.btnContactosVolver);
+            Button btnSalir = (Button)findViewById(R.id.btnContactosSalir);
+
+            RecyclerView lvContactos = (RecyclerView)findViewById(R.id.lvContactos);
+
+            if(lvContactos == null)Log.d("Pruebas", "No pudo cargar del xml el reciycler");
+
+            // Comprobamos si tenemos permisos para mirar las llamadas
+            this.comprobarPermisosLlamada();
             // Preparamos el adaptador de contactos
             sacarContactos();
 
-            if(this.contactos ==null || this.contactos.length == 0)
+            if(this.contactos ==null || this.contactos.size() == 0)
                 Toast.makeText(this, "No saco contactos", Toast.LENGTH_SHORT).show();
             else
-                Toast.makeText(this, "Contactos: " + contactos.length, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Contactos: " + contactos.size(), Toast.LENGTH_SHORT).show();
 
-            AdaptadorContactos adaptador = new AdaptadorContactos(this, R.layout.adaptador_contactos, contactos);
-            lvContactos.setAdapter(adaptador);
+            /*
+            Si el contenedor de Items fuera un ListView seria asi:
+                AdaptadorContactos adaptador = new AdaptadorContactos(this, R.layout.adaptador_contactos, contactos);
+                lvContactos.setAdapter(adaptador);
+            En nuestro caso, lo tuve que cambiar por un ReciclerView asi que el codigo cambia bastante
+             */
+            lvContactos.setHasFixedSize(true); // Para que no cambie de tamaño
+            AdaptadorContactosRV adaptadorRv = new AdaptadorContactosRV(this, (ArrayList<DTOContactos>) contactos);
+            lvContactos.setAdapter(adaptadorRv);
+
+            // Damos funcionalidad al boton de salir
+            btnSalir.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    finish();
+                }
+            });
+
+            // Damos funcionalidad al boton de volver
+            btnVolver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    onBackPressed();
+                }
+            });
+
+            // Damos funcionalidad al boton de llamar
+            btnLlamar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    llamar();
+                }
+            });
+
         }catch (Exception e){
-            Toast.makeText(ActividadContactos.this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.d("Pruebas", "Error: " + e.getMessage());
         }
 
 
-
-
-        // Damos funcionalidad al boton de salir
-        btnSalir.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
-        // Damos funcionalidad al boton de volver
-        btnVolver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
-        });
-
-        // Damos funcionalidad al boton de llamar
-        btnLlamar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                llamar();
-            }
-        });
     }
 
     // Funcion para comprobar los permisos de llamada
@@ -118,8 +133,6 @@ public class ActividadContactos extends AppCompatActivity {
 
         // Ahora recorremos el cursor
         if(cursor!= null){
-            // Sabemos el tamaño del cursor, asi que inicializamos el array que tenemos de contactos
-            this.contactos = new DTOContactos[cursor.getCount()];
 
             // Nos movemos al primer elemento para empezar a rellenar el listado
             cursor.moveToFirst();
@@ -153,7 +166,7 @@ public class ActividadContactos extends AppCompatActivity {
                             numero = cursorTel.getString(cursorTel.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                         }
                         if(nombre!= null && numero!= null){
-                            contactos[i] = new DTOContactos(nombre, numero);
+                            contactos.add(new DTOContactos(nombre, numero));
                             i++;
                         }
                     }
@@ -164,7 +177,7 @@ public class ActividadContactos extends AppCompatActivity {
                 Log.d("Pruebas", "Error " + e.getMessage());
             }
         }
-        Log.d("Pruebas", "He sacado " + contactos.length);
+        Log.d("Pruebas", "He sacado " + contactos.size());
     }
 
     private void llamar(){

@@ -10,8 +10,10 @@
     <color name="color_nombre">#000291</color>
     <color name="color_telefono">#0E4C03</color>
     <color name="color_fondo">#DFE67D</color>
-    <color name="color_encendido">#DFE67D</color>
-    <color name="color_apagado">#DFE67D</color>
-    <color name="color_fondo_marco">#DFE67D</color>
-    <color name="color_marco">#DFE67D</color>
+    <color name="color_encendido">#3191EF</color>
+    <color name="color_apagado">#0D2D4C</color>
+    <color name="color_borde">#112233</color>
+
+    <color name="color_fondo_marco">#012703</color>
+    <color name="color_marco">#00FFDA</color>
 </resources>

@@ -76,7 +76,7 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
                 Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
             }
         } catch (Exception e) {
-            Toast.makeText(getActivity().getBaseContext(), "No se pudo cargar " + e.getMessage(), Toast.LENGTH_LONG).show();
+            Log.d("Pruebas" , "No se pudo cargar " + e.getMessage());
         }
     }
 
@@ -115,10 +115,7 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     @Override
     public void cerrarFragment() {
         if(mp!= null){
-            Toast.makeText(getActivity().getBaseContext(), "Cerrando fragment de sonido", Toast.LENGTH_LONG).show();
             mp.release();
-        }else{
-            Toast.makeText(getActivity().getBaseContext(), "No se puede cerrar MediaPlayer de sonido", Toast.LENGTH_LONG).show();
         }
     }
 }

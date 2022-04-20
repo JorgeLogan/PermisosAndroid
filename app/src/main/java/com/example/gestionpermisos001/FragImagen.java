@@ -15,15 +15,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
 import com.bumptech.glide.Glide;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-
 
 public class FragImagen extends Fragment implements InterfazAccionFragments {
 
@@ -69,7 +62,6 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         try
         {
             if(uri.toString().contains("http")){
-                Toast.makeText(getActivity().getBaseContext(), "Imagen desde internet", Toast.LENGTH_LONG).show();
                 Glide.with(getActivity().getBaseContext()).load(uri).into(this.imgSalida);
             }
             else{

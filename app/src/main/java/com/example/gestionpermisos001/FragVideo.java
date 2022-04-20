@@ -70,16 +70,13 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
             this.vidSalida.setVideoURI(uri);
             this.vidSalida.requestFocus();
             this.vidSalida.start();
-            Toast.makeText(getActivity().getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
-
         }catch(Exception e){
-            Toast.makeText(getActivity().getBaseContext(), "Error " + e.getMessage(), Toast.LENGTH_SHORT).show();
             Log.d("Pruebas", e.getMessage());
         }
     }
 
     @Override
     public void cerrarFragment() {
-        Toast.makeText(getActivity().getBaseContext(), "Cerrando fragment de video", Toast.LENGTH_LONG).show();
+        Log.d("Pruebas", "Cerrando fragment de video");
     }
 }
