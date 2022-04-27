@@ -4,24 +4,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-//import androidx.fragment.app.Fragment;
-
 import android.app.AlertDialog;
-import android.app.Application;
 import android.app.Fragment;
-
 import android.Manifest;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionInfo;
-import android.media.MediaActionSound;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -34,18 +25,18 @@ import java.io.File;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
- * Solo vamos a tener 1 actividad de momento, asi que de entrada, vamos a tener por defecto
- * el Fragment de imagen cargado.
+ * Para trabajar con imagen, video y sonido, usaremos la Main Activity y un varios fragments
+ * En un inicio tendremos seleccionado el modo imagen.
  * Luego según los controles del mando, el fragment central se irá cambiando a video, sonido, o
  * vuelta a imagen segun el boton pulsado.
- * Debajo de
+ *
+ * Tambien tiene un menu, donde podremos pasar a la activity de contactos, ver un dialogo simple
+ * de acerca de... y el boton de salir
  */
 public class MainActivity extends AppCompatActivity implements  InterfazFragments{
 
-    final int PERMISO_GALERIA = 4;
-    final int PERMISO_CAMINO = 1;
-    final int PERMISO_LECTURA = 13;
-    final int PERMISO_CAMARA = 11;
+    final int PERMISO_GALERIA = 1;// 4
+    final int PERMISO_CAMINO = 4;
 
     final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -90,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
     public void pedirPermisosGaleria(){
         if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(MainActivity.this, this.PERMISOS, this.PERMISO_GALERIA );
+            ActivityCompat.requestPermissions(MainActivity.this, this.PERMISOS, this.PERMISO_GALERIA ); // Es el 1
         }
     }
 
@@ -165,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
         // Por si es necesario, convocamos la funcion de pedir permisos runtime
         // (si no lo necesita no los pedira)
-        this.pedirPermisosGaleria();
+        //this.pedirPermisosGaleria();
 
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
@@ -174,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
          */
         switch(this.eleccion){
             case 0: // Imagen desde Almacenamiento interno
-                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+                Intent intentImagen = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
                 intentImagen.setType("image/");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
@@ -244,8 +235,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         switch(this.eleccion){
             case 0: // Imagen desde la SD
                 Log.d("Pruebas", "Intento abrir imagen desde la galeria");
-                Intent intentImagen = null;
 
+                Intent intentImagen = null;
                 File ruta = Environment.getExternalStorageDirectory();
                 intentImagen = new Intent(Intent.ACTION_PICK).setData(Uri.fromFile(ruta));
                 intentImagen.setType("image/*");
@@ -321,13 +312,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      * Para la lista de contactos
      */
     private void listaContactos(){
-        try{
-            Intent intent = new Intent(this, ActividadContactos.class);
-            startActivity(intent);
-        }catch(Exception e){
-            Log.d("Pruebas", "-->" + e.getMessage());
-        }
-
+        Intent intentContactos = new Intent(Intent.ACTION_DIAL);
+        startActivity(intentContactos);
     }
 
     /**
