@@ -67,7 +67,16 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         try{
             Log.d("Pruebas", "Intento cargar el video de internet: " + uri.toString());
             if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();
-            this.vidSalida.setVideoURI(uri);
+
+            if(uri.toString().contains("/")){
+                this.vidSalida.setVideoURI(uri);
+            }
+            else{
+                this.vidSalida.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + uri.toString()));
+
+            }
+
+
             this.vidSalida.requestFocus();
             this.vidSalida.start();
         }catch(Exception e){

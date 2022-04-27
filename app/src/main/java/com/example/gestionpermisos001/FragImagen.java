@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.UnicodeSetSpanner;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 
@@ -59,15 +62,20 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
     public void setArchivo(Uri uri) {
         Log.d("Pruebas", "Intento cargar la imagen  " + uri.toString());
         Bitmap bmp = null;
+
         try
         {
             if(uri.toString().contains("http")){
                 Glide.with(getActivity().getBaseContext()).load(uri).into(this.imgSalida);
             }
-            else{
-                this.imgSalida.setImageURI(uri);
-                this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            else if(!uri.toString().contains("/")){ // Si es un recurso, solo es un numero, sin ruta
+                this.imgSalida.setImageResource(Integer.parseInt(uri.toString()));
+                this.imgSalida.setScaleType(ImageView.ScaleType.FIT_CENTER);
             }
+            else{
+            this.imgSalida.setImageURI(uri);
+            this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
         }
         catch (Exception e) {
             Log.d("Pruebas", "Error sin descripcion");

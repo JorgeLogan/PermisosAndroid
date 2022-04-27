@@ -52,9 +52,8 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     @Override
     public void setArchivo(Uri uri) {
 
-
         try {
-            Log.d("Pruebas", "Intento cargar sonido " + uri.toString());
+            Log.d("Pruebas", "Intento cargar sonido " + uri.getEncodedPath());
             if(mp.isPlaying()) mp.stop();
             mp.release();
             try{
@@ -63,13 +62,17 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
                 if(uri.toString().contains("http")){ // Buscamos desde internet
                     mp.setDataSource(uri.toString());
                 }
-                else if(uri.toString().contains("/external/")){ // Buscamos desde la SD
+                else if(uri.toString().contains("/")){ // Buscamos desde una ruta
                     mp.setDataSource(this.getArchivo(uri));
                 }
-                else{
-                    mp.setDataSource(uri.getPath());
+                else{ // Tenemos un id de recurso
+                    mp.release();
+                    final int numId = Integer.parseInt(uri.toString());
+                    Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
+                    mp = MediaPlayer.create(contenedor.getContext(), numId);
+                    mp.start();
                 }
-                mp.prepare();
+                if(mp.isPlaying() == false) mp.prepare(); // Si se usa create, el prepare la lia parda
                 mp.start();
 
             }catch(Exception e){

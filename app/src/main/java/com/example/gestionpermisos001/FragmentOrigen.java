@@ -61,7 +61,7 @@ public class FragmentOrigen extends Fragment {
         this.btnSD.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((InterfazFragments)getActivity()).abrirSD();
+                ((InterfazFragments)getActivity()).abrirRecursos();
             }
         });
 

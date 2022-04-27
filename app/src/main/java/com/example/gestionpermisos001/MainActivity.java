@@ -20,7 +20,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.Toast;
+
 import java.io.File;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
@@ -33,16 +36,17 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
  */
 public class MainActivity extends AppCompatActivity implements  InterfazFragments{
 
-    final int PERMISO_GALERIA = 4;
-    final int PERMISO_CAMINO = 1;
-    final int PERMISO_LECTURA = 13;
-    final int PERMISO_CAMARA = 11;
+    private final int PERMISO_GALERIA = 4;
+    private final int PERMISO_CAMINO = 1;
+    private final int PERMISO_LECTURA = 13;
+    private final int PERMISO_CAMARA = 11;
 
-    final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
+    private final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
     private int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido
+    private String ruta ="";
 
     // El contenedor de los fragmentos
     private FrameLayout contenedorFragmentos;
@@ -85,11 +89,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         }
     }
 
-    public void pedirPermisosSD(){
-        if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(MainActivity.this, PERMISOS, this.PERMISO_CAMINO);
-        }
-    }
 
     /*********************************************************************************************
      * Implementaciones de la interfaz
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
         // Ya podemos preparar y cargar el nuevo fragment
         this.eleccion = 0;
-        Log.d("Pruebas", "Abrir imagen. Eleccion actual: " + this.eleccion);
         this.cargarFragment();
     }
 
@@ -164,17 +162,17 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
          * Como lo buscara del almacenamiento interno, usaremos un Intent para buscar
          */
         switch(this.eleccion){
-            case 0: // Imagen desde Almacenamiento interno
-                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+            case 0: // Imagen desde Galeria
+                Intent intentImagen = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intentImagen.setType("image/");
                 startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
                 break;
-            case 1: // Video desde almacenamiento interno
+            case 1: // Video desde Galeria
                 Intent intentVideo = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.INTERNAL_CONTENT_URI);
                 intentVideo.setType("video/mp4");
                 startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
                 break;
-            case 2: // Sonido desde el almacenamiento interno
+            case 2: // Sonido desde Galeria
                 Intent intentSonido = new Intent(Intent.ACTION_PICK, MediaStore.Audio.Media.INTERNAL_CONTENT_URI);
                 intentSonido.setType("audio/mp3");
                 startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
@@ -191,32 +189,45 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
          */
 
-        String ruta ="";
-
         switch(this.eleccion){
             case 0: // Imagen desde Internet
                 Log.d("Pruebas", "Abrir imagen de internet");
-                ruta = "https://imagenpng.com/wp-content/uploads/2015/09/imagenes-png.png";
 
-                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(ruta));
+                DTOElementoMultimedia ei1 = new DTOElementoMultimedia("Hommer",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        "https://imagenpng.com/wp-content/uploads/2015/09/imagenes-png.png");
+                DTOElementoMultimedia ei2 = new DTOElementoMultimedia("Marge",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        "https://cdn.icon-icons.com/icons2/21/PNG/256/toons_marge_simpson_margesimpson_2379.png");
 
+                DTOElementoMultimedia listaElementosI[] = {ei1, ei2};
+
+                this.cargarListadoElementos(listaElementosI);
                 break;
             case 1: // Video desde Internet
                 this.cargarFragment();
-                Log.d("Pruebas", "Abrir video de internet");
-                String rutaVideo = "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174";
-                //String rutaVideo = "https://github.com/JorgeLogan/MisCosas/blob/main/LadyPirataIntroReel.mp4";
-                try{
-                    ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(Uri.parse(rutaVideo));
 
-                }catch(Exception e){
-                    Log.d("Pruebas", "Excepcion en intento de abrir video: " + e.getMessage());
-                }
+                DTOElementoMultimedia ev1 = new DTOElementoMultimedia("Rama",
+                        DTOElementoMultimedia.tipoElemento.Video,
+                        "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174");
+                DTOElementoMultimedia ev2 = new DTOElementoMultimedia("Misma rama",
+                        DTOElementoMultimedia.tipoElemento.Video,
+                        "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174");
+
+                DTOElementoMultimedia listaElementosV[] = {ev1, ev2};
+                this.cargarListadoElementos(listaElementosV);
                 break;
             case 2: // Sonido desde internet
-                String rutaSonido = "https://www.freemusicprojects.com/mp3/Lluvia-1.mp3";
-                Uri uri = Uri.parse(rutaSonido);
-                ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(uri);
+
+                DTOElementoMultimedia es1 = new DTOElementoMultimedia("Lluvia relajante",
+                        DTOElementoMultimedia.tipoElemento.Sonido,
+                        "https://www.freemusicprojects.com/mp3/Lluvia-1.mp3");
+                DTOElementoMultimedia es2 = new DTOElementoMultimedia("Piano blues",
+                        DTOElementoMultimedia.tipoElemento.Sonido,
+                        "https://www.freemusicprojects.com/mp3/the-blues.mp3");
+
+                DTOElementoMultimedia listaElementosS[] = {es1, es2};
+                this.cargarListadoElementos(listaElementosS);
                 break;
         }
     }
@@ -225,33 +236,47 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      * Funcion para seleccionar la tarjeta SD
      */
     @Override
-    public void abrirSD() {
+    public void abrirRecursos() {
         Log.d("Pruebas", "Abrir SD");
-        /**
-         * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
-         */
-        this.pedirPermisosSD();
 
         switch(this.eleccion){
-            case 0: // Imagen desde la SD
+            case 0: // Imagen desde recursos
                 Log.d("Pruebas", "Intento abrir imagen desde la galeria");
-                Intent intentImagen = null;
 
-                File ruta = Environment.getExternalStorageDirectory();
-                intentImagen = new Intent(Intent.ACTION_PICK).setData(Uri.fromFile(ruta));
-                intentImagen.setType("image/*");
-                startActivityForResult(intentImagen.createChooser(intentImagen, "Selecciona imagen"), 10);
+                DTOElementoMultimedia ei1 = new DTOElementoMultimedia("Egroj",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.egroj));
+                DTOElementoMultimedia ei2 = new DTOElementoMultimedia("Lady Pirata",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.ladypirata_juego));
+
+                DTOElementoMultimedia[] elementosI = {ei1, ei2};
+                this.cargarListadoElementos(elementosI);
                 break;
-            case 1: // Video desde SD
-                Intent intentVideo = new Intent(Intent.ACTION_PICK);
-                intentVideo.setType("video/");
-                startActivityForResult(intentVideo.createChooser(intentVideo, "Selecciona video"), 10);
+            case 1: // Video desde recursos
+                DTOElementoMultimedia ev1 = new DTOElementoMultimedia("Reel",
+                        DTOElementoMultimedia.tipoElemento.Video,
+                        String.valueOf(R.raw.mi_reel));
+                DTOElementoMultimedia ev2 = new DTOElementoMultimedia("Lady Pirata",
+                        DTOElementoMultimedia.tipoElemento.Video,
+                        String.valueOf(R.raw.ladypirata));
+                DTOElementoMultimedia ev3 = new DTOElementoMultimedia("Egroj",
+                        DTOElementoMultimedia.tipoElemento.Video,
+                        String.valueOf(R.raw.egroj_intro));
+
+                DTOElementoMultimedia[] elementosV = {ev1, ev2, ev3};
+                this.cargarListadoElementos(elementosV);
                 break;
-            case 2: // Sonido desde SD
-                Intent intentSonido = new Intent(Intent.ACTION_PICK);
-                intentSonido.setData(Uri.fromFile(Environment.getExternalStorageDirectory()));
-                intentSonido.setType("audio/mp3");
-                startActivityForResult(intentSonido.createChooser(intentSonido, "Selecciona audio"), 10);
+            case 2: // Sonido desde recursos
+                DTOElementoMultimedia es1 = new DTOElementoMultimedia("Musica 1",
+                        DTOElementoMultimedia.tipoElemento.Sonido,
+                        String.valueOf(R.raw.musica));
+                DTOElementoMultimedia es2 = new DTOElementoMultimedia("Sonido retro juegos",
+                        DTOElementoMultimedia.tipoElemento.Sonido,
+                        String.valueOf(R.raw.retro));
+
+                DTOElementoMultimedia[] elementosS = {es1, es2};
+                this.cargarListadoElementos(elementosS);
                 break;
         }
     }
@@ -278,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         transaccion.replace(R.id.contenedorFragments, this.listadoFragmentos[this.eleccion]);
         transaccion.commit();
     }
+
 
     /**********************************************************************************************
      * Menu de llamadas a contactos
@@ -308,7 +334,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         return super.onOptionsItemSelected(item);
     }
 
-    /**
+    /**********************************************************************************************
      * Para la lista de contactos
      */
     private void listaContactos(){
@@ -321,7 +347,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
     }
 
-    /**
+
+    /**********************************************************************************************
      * Para un alert dialog simple con un acerca de...
      */
     private void acercaDe(){
@@ -332,6 +359,27 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         dialogo.setPositiveButton(R.string.genial, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) { }
+        });
+        dialogo.show();
+    }
+
+
+    /**********************************************************************************************
+     * Para poder hacer un listview personalizado y seleccionar una imagen de recursos o intenet
+     * @param elementos los elementos DTOELementos
+     * @return
+     */
+    private void cargarListadoElementos(DTOElementoMultimedia[] elementos){
+        AdaptadorSelector selector = new AdaptadorSelector(getBaseContext(), R.layout.layout_seleccion, elementos);
+        AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
+        dialogo.setAdapter(selector, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DTOElementoMultimedia elem = selector.getItem(i);
+                ruta = selector.getItem(i).getDatos();
+
+                ((InterfazAccionFragments)listadoFragmentos[eleccion]).setArchivo(Uri.parse(ruta));
+            }
         });
         dialogo.show();
     }

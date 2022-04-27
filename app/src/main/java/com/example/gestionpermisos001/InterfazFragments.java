@@ -7,5 +7,5 @@ public interface InterfazFragments {
 
     public void abrirGaleria();
     public void abrirWWW();
-    public void abrirSD();
+    public void abrirRecursos();
 }
