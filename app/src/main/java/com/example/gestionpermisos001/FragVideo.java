@@ -1,6 +1,7 @@
 package com.example.gestionpermisos001;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,7 +25,7 @@ import androidx.appcompat.widget.ViewUtils;
  */
 public class FragVideo extends Fragment implements InterfazAccionFragments{
 
-    VideoView vidSalida;
+    static VideoView vidSalida;
 //    MediaController mc = null;
 
     public FragVideo() {
@@ -38,11 +39,22 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         return fragment;
     }
 
+    /**
+     * Metodo que se llama al crear el layout
+     * @param savedInstanceState el conjunto de datos que puede recibir
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * Metodo que crea la vista del layout
+     * @param inflater El layout inflador
+     * @param container El contenedor
+     * @param savedInstanceState El conjunto de datos que puede reccibit
+     * @return La vista finalizada
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,6 +74,11 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         return vista;
     }
 
+
+    /**
+     * Funcion para pasar un recurso al video del fragment
+     * @param uri el recurso a colocar
+     */
     @Override
     public void setArchivo(Uri uri) {
         try{
@@ -84,8 +101,18 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         }
     }
 
+
+    /**
+     * FUncion para cerrar el fragment
+     */
     @Override
     public void cerrarFragment() {
         Log.d("Pruebas", "Cerrando fragment de video");
+
+        // Por si queda enganchado en algun cambio
+        if(this.vidSalida!= null && this.vidSalida.isPlaying()){
+            this.vidSalida.stopPlayback();
+            this.vidSalida.resume();
+        }
     }
 }

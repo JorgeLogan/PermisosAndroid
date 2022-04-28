@@ -18,4 +18,9 @@
     <string name="colgar">Colgar</string>
     <string name="nombre">Nombre</string>
     <string name="telefono">Teléfono</string>
+    <string name="selec_galeria_land">Galería</string>
+    <string name="selec_www_land">Internet</string>
+    <string name="selec_sd_land">Tarjeta SD</string>
+    <string name="selec_recurso_land">Recursos</string>
+    <string name="selec_origen_land">Selecciona:</string>
 </resources>

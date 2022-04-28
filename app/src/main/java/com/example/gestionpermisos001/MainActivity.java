@@ -36,16 +36,18 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
  */
 public class MainActivity extends AppCompatActivity implements  InterfazFragments{
 
+    // Para poder salir desde otra activity
+    public static MainActivity instancia = null;
+
     private final int PERMISO_GALERIA = 4;
-    private final int PERMISO_CAMINO = 1;
-    private final int PERMISO_LECTURA = 13;
-    private final int PERMISO_CAMARA = 11;
 
     private final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
-    private int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido
+    private static int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido, Estatica para conservar la eleccion
+    public static int getEleccion() { return eleccion; }
+
     private String ruta ="";
 
     // El contenedor de los fragmentos
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Preparamos la instancia
+        if(instancia == null) instancia = this;
 
         // Cargo el contenedor de los fragmentos variables
         this.contenedorFragmentos = (FrameLayout)findViewById(R.id.contenedorFragments);
@@ -249,8 +254,20 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 DTOElementoMultimedia ei2 = new DTOElementoMultimedia("Lady Pirata",
                         DTOElementoMultimedia.tipoElemento.Imagen,
                         String.valueOf(R.raw.ladypirata_juego));
+                DTOElementoMultimedia ei3 = new DTOElementoMultimedia("Malos de Egroj",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.egroj_magos));
+                DTOElementoMultimedia ei4 = new DTOElementoMultimedia("escena de Egroj",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.egroj_fuego));
+                DTOElementoMultimedia ei5 = new DTOElementoMultimedia("Inicio Lady Pirada",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.pirata_inicio));
+                DTOElementoMultimedia ei6 = new DTOElementoMultimedia("Pausa Egroj",
+                        DTOElementoMultimedia.tipoElemento.Imagen,
+                        String.valueOf(R.raw.egroj_juego));
 
-                DTOElementoMultimedia[] elementosI = {ei1, ei2};
+                DTOElementoMultimedia[] elementosI = {ei1, ei2, ei3, ei4, ei5, ei6};
                 this.cargarListadoElementos(elementosI);
                 break;
             case 1: // Video desde recursos
@@ -328,11 +345,17 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 this.acercaDe();
                 break;
             case R.id.itemSalir:
-                finish();
+                salir();
                 break;
         }
         return super.onOptionsItemSelected(item);
     }
+
+    // Para salir desde cualquier actividad
+    public void salir(){
+        finish();
+    }
+
 
     /**********************************************************************************************
      * Para la lista de contactos

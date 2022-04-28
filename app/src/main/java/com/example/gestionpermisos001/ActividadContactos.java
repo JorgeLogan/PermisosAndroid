@@ -1,5 +1,6 @@
 package com.example.gestionpermisos001;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -26,7 +28,7 @@ import java.util.List;
  * Clase para manejar la lista de contactos
  */
 public class ActividadContactos extends AppCompatActivity {
-    private int PERMISO_LEER_CONTACTOS = 100;
+    private final int PERMISO_LEER_CONTACTOS = 100;
     private List<DTOContactos> contactos = new ArrayList<>();
 
     @Override
@@ -37,7 +39,6 @@ public class ActividadContactos extends AppCompatActivity {
             setContentView(R.layout.activity_actividad_contactos);
 
             // Cargamos los elementos
-            Button btnLlamar = (Button)findViewById(R.id.btnContactosLlamar);
             Button btnVolver = (Button)findViewById(R.id.btnContactosVolver);
             Button btnSalir = (Button)findViewById(R.id.btnContactosSalir);
 
@@ -55,12 +56,6 @@ public class ActividadContactos extends AppCompatActivity {
             else
                 Toast.makeText(this, "Contactos: " + contactos.size(), Toast.LENGTH_SHORT).show();
 
-            /*
-            Si el contenedor de Items fuera un ListView seria asi:
-                AdaptadorContactos adaptador = new AdaptadorContactos(this, R.layout.adaptador_contactos, contactos);
-                lvContactos.setAdapter(adaptador);
-            En nuestro caso, lo tuve que cambiar por un ReciclerView asi que el codigo cambia bastante
-             */
             lvContactos.setHasFixedSize(true); // Para que no cambie de tamaño
             AdaptadorContactosRV adaptadorRv = new AdaptadorContactosRV(this, (ArrayList<DTOContactos>) contactos);
             lvContactos.setAdapter(adaptadorRv);
@@ -69,6 +64,7 @@ public class ActividadContactos extends AppCompatActivity {
             btnSalir.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    MainActivity.instancia.salir();
                     finish();
                 }
             });
@@ -81,19 +77,9 @@ public class ActividadContactos extends AppCompatActivity {
                 }
             });
 
-            // Damos funcionalidad al boton de llamar
-            btnLlamar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    llamar();
-                }
-            });
-
         }catch (Exception e){
             Log.d("Pruebas", "Error: " + e.getMessage());
         }
-
-
     }
 
     // Funcion para comprobar los permisos de llamada
@@ -106,6 +92,7 @@ public class ActividadContactos extends AppCompatActivity {
         }
     }
 
+
     // Funcion para hacer pruebas de layouts antes de conseguir sacar los contactos
     private void crearListadoPrueba(){
         DTOContactos[] contactos = new DTOContactos[6];
@@ -116,6 +103,7 @@ public class ActividadContactos extends AppCompatActivity {
         contactos[4] = new DTOContactos("Gruño", "78l910");
         contactos[5] = new DTOContactos("Yaki y Canelo", "112213");
     }
+
 
     // Funcion para acceder al listado de contactos y pasarlos al array de DTOContactos
     @SuppressLint("Range")

@@ -42,7 +42,7 @@ public class FragmentOrigen extends Fragment {
 
         this.btnGaleria = (Button)vista.findViewById(R.id.btnGaleria);
         this.btnWWW = (Button)vista.findViewById(R.id.btnWWW);
-        this.btnSD = (Button)vista.findViewById(R.id.btnSD);
+        this.btnSD = (Button)vista.findViewById(R.id.btnRecursos);
 
         this.btnGaleria.setOnClickListener(new View.OnClickListener() {
             @Override

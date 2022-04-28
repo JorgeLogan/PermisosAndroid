@@ -22,7 +22,7 @@ import java.io.IOException;
 public class FragSonido extends Fragment implements InterfazAccionFragments {
     private ViewGroup contenedor;
     private ImageView imgSonido;
-    private MediaPlayer mp;
+    private static MediaPlayer mp;
 
     public FragSonido() {
         // Required empty public constructor
@@ -40,6 +40,15 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         View vista =  inflater.inflate(R.layout.fragment_sonido, container, false);
         this.imgSonido = (ImageView) vista.findViewById(R.id.imgSonido);
         this.contenedor = container;
+
+        try{
+            if(mp!= null && mp.isPlaying()) mp.stop();
+        }catch(Exception e){
+            Log.d("Pruebas", "Error al cerrar el mp de sonido: " + e.getMessage());
+        }
+
+
+
         // Al principio carga un sonido desde recursos
         mp = MediaPlayer.create(container.getContext(), R.raw.musica);
         mp.start();

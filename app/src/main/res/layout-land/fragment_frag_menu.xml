@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragMenu">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="vertical">
+
+        <ImageButton
+            android:id="@+id/itemCamara"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/forma_redondeada_encendida"
+            android:scaleType="fitXY"
+            android:src="@drawable/item_camara" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
+        <ImageButton
+            android:id="@+id/itemWWW"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/forma_redondeada_apagada"
+            android:scaleType="fitXY"
+            android:src="@drawable/item_video" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"/>
+
+        <ImageButton
+            android:id="@+id/itemSD"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/forma_redondeada_apagada"
+            android:scaleType="fitXY"
+            android:src="@drawable/item_audio" />
+
+    </LinearLayout>
+
+</FrameLayout>
