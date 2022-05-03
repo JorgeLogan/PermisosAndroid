@@ -1,11 +1,6 @@
 package com.example.gestionpermisos001;
 
-import android.Manifest;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.icu.text.UnicodeSetSpanner;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -16,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
@@ -24,19 +18,12 @@ import com.bumptech.glide.Glide;
 public class FragImagen extends Fragment implements InterfazAccionFragments {
 
     private ImageView imgSalida;
+    private static Uri uriActual = null;
 
     public FragImagen() {
         // Required empty public constructor
     }
 
-
-    // TODO: Rename and change types and number of parameters
-    public static FragImagen newInstance(String param1, String param2) {
-        FragImagen fragment = new FragImagen();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +39,10 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         this.imgSalida = (ImageView)vista.findViewById(R.id.imgSalida);
 
         // En el inicio, carga la imagen desde recursos
-        this.imgSalida.setImageBitmap(BitmapFactory.decodeResource(getResources(),R.raw.warnerbrospresents));
+        if(uriActual == null){
+            uriActual = Uri.parse(String.valueOf(R.raw.warnerbrospresents));
+        }
+        this.setArchivo(uriActual,0);
 
         return vista;
     }
@@ -60,7 +50,7 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
     // Aqui en las imagenes, no usamos el parametro de posicion
     @Override
     public void setArchivo(Uri uri, int posicion) {
-        Log.d("Pruebas", "Intento cargar la imagen  " + uri.toString());
+        this.uriActual = uri;
         Bitmap bmp = null;
 
         try
@@ -77,9 +67,7 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
             this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
         }
-        catch (Exception e) {
-            Log.d("Pruebas", "Error sin descripcion");
-        }
+        catch (Exception e) { }
     }
 
     @Override
@@ -89,8 +77,8 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
 
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.d("Pruebas", "Busqueda de permisos override onRequestPermissionsResult");
     }
 }

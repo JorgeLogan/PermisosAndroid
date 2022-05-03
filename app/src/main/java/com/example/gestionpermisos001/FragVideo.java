@@ -29,24 +29,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         // Required empty public constructor
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        try{
-            outState.putString("uri", uriActual.toString());
-
-            if(vidSalida!= null && vidSalida.isPlaying()){
-                outState.putInt("posicion", posicion);
-                vidSalida.stopPlayback();
-            }// else posicion = 0; // Para evitar errores
-
-        }catch(Exception e){
-            Log.d("Pruebas","Error al grabar en onSaveInstance: " + e.getMessage());
-        }
-    }
-
-    /**
+     /**
      * Metodo que se llama al crear el layout
      * @param savedInstanceState el conjunto de datos que puede recibir
      */
@@ -70,13 +53,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
 
         vidSalida = (VideoView)vista.findViewById(R.id.vidSalida);
 
-        if(savedInstanceState!= null && savedInstanceState.containsKey("uri")){
-            uriActual = Uri.parse(savedInstanceState.getString("uri"));
-            //posicion = savedInstanceState.getInt("posicion");
-            Log.d("Pruebas", "Cargo en el onCreate el recurso " + uriActual.toString());
-        }
-        else if(uriActual == null){
-            Log.d("Pruebas", "URI nula!!!! -------------------------------------------");
+        if(uriActual == null){
             // Cargara el video de recursos al iniciar
             String paquete = getActivity().getPackageName();
             uriActual = Uri.parse("android.resource://" + paquete + "/" + R.raw.mi_reel);
@@ -86,7 +63,6 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         vidSalida.requestFocus();
         this.setArchivo(uriActual, posicion);
 
-        Log.d("Pruebas", "URI de video actual " + uriActual.toString());
         // Devolvemos la vista
         return vista;
     }
@@ -102,11 +78,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         uriActual = uri;
         posicion = pos;
 
-        Log.d("Pruebas", "Posicion: " + posicion);
-
         try{
-            Log.d("Pruebas", ">> -- >> Intento cargar el video: " + uri.toString());
-
             if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();
 
             if(uri.toString().contains("/")){
@@ -121,9 +93,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
 
             vidSalida.seekTo(posicion);
             vidSalida.start();
-        }catch(Exception e){
-            Log.d("Pruebas", e.getMessage());
-        }
+        }catch(Exception e){}
     }
 
 
@@ -135,12 +105,9 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         // Por si queda enganchado en algun cambio
         if(vidSalida!= null && vidSalida.isPlaying()){
             posicion = vidSalida.getCurrentPosition();
-            Log.d("Pruebas", "Cerrando fragment de video  ----> Posicion Actual: "
-                    + posicion);
             vidSalida.stopPlayback();
             vidSalida.resume();
         }
-
 
         Bundle b = new Bundle();
         b.putInt("posicion", posicion);

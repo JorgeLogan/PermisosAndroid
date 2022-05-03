@@ -12,14 +12,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-
+/**
+ * Fragment para el menu de Imagen, Video y Sonido
+ * En esta clase para controlar el cambio de opcion, uso el metodo de onSaveInstanceState
+ */
 public class FragMenu extends Fragment {
     private int opcion = 0;
 
     private ImageButton imgImagen;
     private ImageButton imgVideo;
     private ImageButton imgSonido;
-
 
     // Constructor publico requerido
     public FragMenu() {}
