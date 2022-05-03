@@ -155,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      */
     @Override
     public void abrirGaleria() {
+
         Log.d("Pruebas", "Abrir galeria");
 
         // Por si es necesario, convocamos la funcion de pedir permisos runtime

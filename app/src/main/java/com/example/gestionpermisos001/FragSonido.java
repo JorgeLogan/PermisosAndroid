@@ -1,6 +1,7 @@
 package com.example.gestionpermisos001;
 
 import android.database.Cursor;
+import android.media.MediaParser;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -32,15 +33,12 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         Log.d("Pruebas", "<-- <-- Se inicia onSaveInstanceState --> -->");
-        if(mp != null){
+        if(mp != null && outState!= null){
             try{
                 outState.putString("uri", this.uriActual.toString());
-                this.posicion = mp.getCurrentPosition();
-                outState.putInt("posicion", this.posicion);
+                outState.putInt("posicion", posicion);
 
-                if(mp.isPlaying()) mp.stop();
-
-                Log.d("Pruebas","Guardados " + this.uriActual.toString() + " en la pos " + this.posicion);
+                Log.d("Pruebas","Guardados " + this.uriActual.toString() + " en la pos " + posicion);
             }catch(Exception e){
                Log.d("Pruebas","Error al cargar el frag de sonido: "
                        + e.getMessage());
@@ -69,27 +67,16 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         this.imgSonido = (ImageView) vista.findViewById(R.id.imgSonido);
         this.contenedor = container;
 
-        try{
-            // Si no pasamos un bundle, estamos creando, sino, recuperando informacion
-            if(savedInstanceState!= null && savedInstanceState.containsKey("uri")){
-                this.uriActual = Uri.parse(savedInstanceState.getString("uri"));
-                this.posicion = savedInstanceState.getInt("posicion");
-                this.setArchivo(this.uriActual, this.posicion);
-                Log.d("Pruebas","<<<<<<<<   En onCreate recuperamos " +
-                        this.uriActual.toString() + " " + this.posicion);
-            }else{
-                Log.d("Pruebas","<<<<<<<<   En onCreate CREAMOS " +
-                        this.uriActual.toString() + " " + this.posicion);
-            }
+        if(savedInstanceState!= null && savedInstanceState.containsKey("uri")){
+            uriActual = Uri.parse(savedInstanceState.getString("uri"));
+            posicion = savedInstanceState.getInt("posicion");
 
-            mp = MediaPlayer.create(contenedor.getContext(), R.raw.musica);
-            mp.start();
-
-        }catch(Exception e){
-            Log.d("Pruebas","Error al cargar el bundle en el oncreate: " + e.getMessage());
+            this.setArchivo(uriActual, posicion);
+            Log.d("Pruebas", "SI Se paso bundle al onCreate");
+        }else if(mp == null){
+            this.setArchivo(uriActual, 0);
+            Log.d("Pruebas", "NO Se paso bundle al onCreate");
         }
-
-
 
         // Devolvemos la vista
         return vista;
@@ -99,36 +86,50 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     @Override
     public void setArchivo(Uri uri, int posicion) {
         Log.d("Pruebas","\\\\\\\\ Uri pasado: " + uri.toString());
+
+        uriActual = uri;
+        try{
+            mp.stop();
+        }catch (Exception e){}
+
         try {
-            if(mp !=null){
-                if (mp.isPlaying()) mp.stop();
-                mp.release();
-                try {
-                    mp = new MediaPlayer();
+            mp = new MediaPlayer();
 
-                    if (uri.toString().contains("http")) { // Buscamos desde internet
-                        mp.setDataSource(uri.toString());
-                    } else if (uri.toString().contains("/")) { // Buscamos desde una ruta
-                        mp.setDataSource(this.getArchivo(uri));
-                    } else { // Tenemos un id de recurso
-                        mp.release();
-                        final int numId = Integer.parseInt(uri.toString());
-                        //Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
-                        mp = MediaPlayer.create(contenedor.getContext(), numId);
-                        mp.start();
-                    }
-
-                } catch (Exception e) {
-                    Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
-                }
-                if(mp.isPlaying() == false) mp.prepare(); // Si se usa create, el prepare la lia parda
-                mp.start();
-
-                this.uriActual = uri;
+            if (uri.toString().contains("http")) { // Buscamos desde internet
+                mp.setDataSource(uri.toString());
+                mp.prepare();
             }
+            else if (uri.toString().contains("/")) { // Buscamos desde una ruta
+                mp.setDataSource(this.getArchivo(uri));
+                mp.prepare();
+            }
+            else { // Tenemos un id de recurso
+                //mp.release();
+                final int numId = Integer.parseInt(uri.toString());
+                //Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
+                mp = MediaPlayer.create(contenedor.getContext(), numId);
+            }
+
+            mp.start();
+            mp.seekTo(posicion);
+
         } catch (Exception e) {
-            Log.d("Pruebas" , "No se pudo cargar " + e.getMessage());
+            Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
         }
+    }
+
+    @Override
+    public void cerrarFragment() {
+        Log.d("Pruebas", "Cerrar fragment de sonido");
+        try{
+            if(mp!= null){
+                if (mp.isPlaying()){
+                    posicion = mp.getCurrentPosition();
+                    mp.stop();
+                }
+                mp.release();
+            }
+        }catch(Exception e){}
     }
 
     // Para poder localizar un archivo del almacenamiento
@@ -158,15 +159,13 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
 
             resultado = c.getString(indiceColumna);
         }
-
         return resultado;
     }
 
-    // Para cerrar y liberar memoria
+    // Para que no siga sonando al cambiar
     @Override
-    public void cerrarFragment() {
-        if(mp!= null){
-            mp.release();
-        }
+    public void onPause() {
+        super.onPause();
+        this.cerrarFragment();
     }
 }

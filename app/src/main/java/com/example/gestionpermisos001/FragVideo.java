@@ -24,10 +24,12 @@ import androidx.appcompat.widget.ViewUtils;
  * create an instance of this fragment.
  */
 public class FragVideo extends Fragment implements InterfazAccionFragments{
+    private static VideoView vidSalida;
+    private Uri uriActual = Uri.parse(String.valueOf(R.raw.mi_reel));
+    private  int posicion = 0;
 
-    static VideoView vidSalida;
-//    MediaController mc = null;
 
+    // Constructor neceasario
     public FragVideo() {
         // Required empty public constructor
     }
@@ -91,9 +93,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
             }
             else{
                 this.vidSalida.setVideoURI(Uri.parse("android.resource://" + getActivity().getPackageName() + "/" + uri.toString()));
-
             }
-
 
             this.vidSalida.requestFocus();
             this.vidSalida.start();
