@@ -306,7 +306,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK){
             Uri path = data.getData();
-            ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path);
+            ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path,0);
         }
     }
 
@@ -401,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 DTOElementoMultimedia elem = selector.getItem(i);
                 ruta = selector.getItem(i).getDatos();
 
-                ((InterfazAccionFragments)listadoFragmentos[eleccion]).setArchivo(Uri.parse(ruta));
+                ((InterfazAccionFragments)listadoFragmentos[eleccion]).setArchivo(Uri.parse(ruta),0);
             }
         });
         dialogo.show();

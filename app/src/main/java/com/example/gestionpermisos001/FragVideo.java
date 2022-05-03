@@ -78,9 +78,10 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
     /**
      * Funcion para pasar un recurso al video del fragment
      * @param uri el recurso a colocar
+     * @param posicion la posicion del video
      */
     @Override
-    public void setArchivo(Uri uri) {
+    public void setArchivo(Uri uri, int posicion) {
         try{
             Log.d("Pruebas", "Intento cargar el video de internet: " + uri.toString());
             if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();

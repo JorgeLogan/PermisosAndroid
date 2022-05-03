@@ -22,10 +22,10 @@ import java.io.IOException;
 public class FragSonido extends Fragment implements InterfazAccionFragments {
     private ViewGroup contenedor;
     private ImageView imgSonido;
-    private static MediaPlayer mp;
+    private static MediaPlayer mp = null;
 
-    private Uri uriActual;
-    private int posicion = 0;
+    private static Uri uriActual = null;
+    private static int posicion = 0;
 
     // Para cuando se cambie la actividad o se rote, guardamos los datos
     @Override
@@ -35,21 +35,24 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         if(mp != null){
             try{
                 outState.putString("uri", this.uriActual.toString());
-                outState.putInt("posicion", mp.getCurrentPosition());
+                this.posicion = mp.getCurrentPosition();
+                outState.putInt("posicion", this.posicion);
+
+                if(mp.isPlaying()) mp.stop();
 
                 Log.d("Pruebas","Guardados " + this.uriActual.toString() + " en la pos " + this.posicion);
             }catch(Exception e){
                Log.d("Pruebas","Error al cargar el frag de sonido: "
                        + e.getMessage());
             }
-        }else{
-            Log.d("Pruebas", "No hay bundles en el metodo onSaveInstanceState");
         }
     }
 
-
+    // Constructor vacio
     public FragSonido() {
         // Required empty public constructor
+        this.uriActual = Uri.parse(String.valueOf(R.raw.musica));
+        this.posicion = 0;
     }
 
     // Nos vale para la creacion y la recuperacion de la vista
@@ -67,36 +70,26 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         this.contenedor = container;
 
         try{
-            if(mp!= null && mp.isPlaying()) mp.stop();
-        }catch(Exception e){
-            Log.d("Pruebas", "Error al cerrar el mp de sonido: " + e.getMessage());
-        }
-
-        try{
             // Si no pasamos un bundle, estamos creando, sino, recuperando informacion
-            if(savedInstanceState == null){
-//                this.uriActual = Uri.parse(String.valueOf(R.raw.musica));
-
-  //              Log.d("Pruebas","<<<<<<<<   En onCreate CREAMOS " + this.uriActual.toString() + " " + mp.getCurrentPosition());
-
-            }else
-            {
+            if(savedInstanceState!= null && savedInstanceState.containsKey("uri")){
                 this.uriActual = Uri.parse(savedInstanceState.getString("uri"));
                 this.posicion = savedInstanceState.getInt("posicion");
-                Log.d("Pruebas","<<<<<<<<   En onCreate recuperamos " + this.uriActual.toString() + " " + mp.getCurrentPosition());
+                this.setArchivo(this.uriActual, this.posicion);
+                Log.d("Pruebas","<<<<<<<<   En onCreate recuperamos " +
+                        this.uriActual.toString() + " " + this.posicion);
+            }else{
+                Log.d("Pruebas","<<<<<<<<   En onCreate CREAMOS " +
+                        this.uriActual.toString() + " " + this.posicion);
             }
+
+            mp = MediaPlayer.create(contenedor.getContext(), R.raw.musica);
+            mp.start();
+
         }catch(Exception e){
             Log.d("Pruebas","Error al cargar el bundle en el oncreate: " + e.getMessage());
-
         }
 
 
-        // Al principio carga un sonido desde recursos
-        //mp = MediaPlayer.create(container.getContext(), R.raw.musica);
-        //mp.start();
-        this.setArchivo(this.uriActual);
-        this.mp.seekTo(posicion);
-        this.mp.start();
 
         // Devolvemos la vista
         return vista;
@@ -104,15 +97,10 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
 
     // Para abrir un URI y que empiece a funcionar
     @Override
-    public void setArchivo(Uri uri) {
-
+    public void setArchivo(Uri uri, int posicion) {
+        Log.d("Pruebas","\\\\\\\\ Uri pasado: " + uri.toString());
         try {
-            //Log.d("Pruebas", "Intento cargar sonido " + uri.getEncodedPath());
-
-            if(mp== null){
-                mp = MediaPlayer.create(contenedor.getContext(), R.raw.musica);
-
-            }else {
+            if(mp !=null){
                 if (mp.isPlaying()) mp.stop();
                 mp.release();
                 try {

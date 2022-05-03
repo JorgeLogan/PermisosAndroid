@@ -57,9 +57,9 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         return vista;
     }
 
-
+    // Aqui en las imagenes, no usamos el parametro de posicion
     @Override
-    public void setArchivo(Uri uri) {
+    public void setArchivo(Uri uri, int posicion) {
         Log.d("Pruebas", "Intento cargar la imagen  " + uri.toString());
         Bitmap bmp = null;
 
