@@ -24,10 +24,35 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     private ImageView imgSonido;
     private static MediaPlayer mp;
 
+    private Uri uriActual;
+    private int posicion = 0;
+
+    // Para cuando se cambie la actividad o se rote, guardamos los datos
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("Pruebas", "<-- <-- Se inicia onSaveInstanceState --> -->");
+        if(mp != null){
+            try{
+                outState.putString("uri", this.uriActual.toString());
+                outState.putInt("posicion", mp.getCurrentPosition());
+
+                Log.d("Pruebas","Guardados " + this.uriActual.toString() + " en la pos " + this.posicion);
+            }catch(Exception e){
+               Log.d("Pruebas","Error al cargar el frag de sonido: "
+                       + e.getMessage());
+            }
+        }else{
+            Log.d("Pruebas", "No hay bundles en el metodo onSaveInstanceState");
+        }
+    }
+
+
     public FragSonido() {
         // Required empty public constructor
     }
 
+    // Nos vale para la creacion y la recuperacion de la vista
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,11 +72,31 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
             Log.d("Pruebas", "Error al cerrar el mp de sonido: " + e.getMessage());
         }
 
+        try{
+            // Si no pasamos un bundle, estamos creando, sino, recuperando informacion
+            if(savedInstanceState == null){
+//                this.uriActual = Uri.parse(String.valueOf(R.raw.musica));
+
+  //              Log.d("Pruebas","<<<<<<<<   En onCreate CREAMOS " + this.uriActual.toString() + " " + mp.getCurrentPosition());
+
+            }else
+            {
+                this.uriActual = Uri.parse(savedInstanceState.getString("uri"));
+                this.posicion = savedInstanceState.getInt("posicion");
+                Log.d("Pruebas","<<<<<<<<   En onCreate recuperamos " + this.uriActual.toString() + " " + mp.getCurrentPosition());
+            }
+        }catch(Exception e){
+            Log.d("Pruebas","Error al cargar el bundle en el oncreate: " + e.getMessage());
+
+        }
 
 
         // Al principio carga un sonido desde recursos
-        mp = MediaPlayer.create(container.getContext(), R.raw.musica);
-        mp.start();
+        //mp = MediaPlayer.create(container.getContext(), R.raw.musica);
+        //mp.start();
+        this.setArchivo(this.uriActual);
+        this.mp.seekTo(posicion);
+        this.mp.start();
 
         // Devolvemos la vista
         return vista;
@@ -62,30 +107,36 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     public void setArchivo(Uri uri) {
 
         try {
-            Log.d("Pruebas", "Intento cargar sonido " + uri.getEncodedPath());
-            if(mp.isPlaying()) mp.stop();
-            mp.release();
-            try{
-                mp = new MediaPlayer();
+            //Log.d("Pruebas", "Intento cargar sonido " + uri.getEncodedPath());
 
-                if(uri.toString().contains("http")){ // Buscamos desde internet
-                    mp.setDataSource(uri.toString());
-                }
-                else if(uri.toString().contains("/")){ // Buscamos desde una ruta
-                    mp.setDataSource(this.getArchivo(uri));
-                }
-                else{ // Tenemos un id de recurso
-                    mp.release();
-                    final int numId = Integer.parseInt(uri.toString());
-                    Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
-                    mp = MediaPlayer.create(contenedor.getContext(), numId);
-                    mp.start();
+            if(mp== null){
+                mp = MediaPlayer.create(contenedor.getContext(), R.raw.musica);
+
+            }else {
+                if (mp.isPlaying()) mp.stop();
+                mp.release();
+                try {
+                    mp = new MediaPlayer();
+
+                    if (uri.toString().contains("http")) { // Buscamos desde internet
+                        mp.setDataSource(uri.toString());
+                    } else if (uri.toString().contains("/")) { // Buscamos desde una ruta
+                        mp.setDataSource(this.getArchivo(uri));
+                    } else { // Tenemos un id de recurso
+                        mp.release();
+                        final int numId = Integer.parseInt(uri.toString());
+                        //Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
+                        mp = MediaPlayer.create(contenedor.getContext(), numId);
+                        mp.start();
+                    }
+
+                } catch (Exception e) {
+                    Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
                 }
                 if(mp.isPlaying() == false) mp.prepare(); // Si se usa create, el prepare la lia parda
                 mp.start();
 
-            }catch(Exception e){
-                Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
+                this.uriActual = uri;
             }
         } catch (Exception e) {
             Log.d("Pruebas" , "No se pudo cargar " + e.getMessage());
