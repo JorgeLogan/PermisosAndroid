@@ -46,8 +46,6 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
             Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
     private static int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido, Estatica para conservar la eleccion
-    public static int getEleccion() { return eleccion; }
-
     private String ruta ="";
 
     // El contenedor de los fragmentos
@@ -305,9 +303,13 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK){
+        Log.d("Pruebas", "Resultado -> " + requestCode + "  " + resultCode);
+        if(resultCode == RESULT_OK && requestCode!= 100){
             Uri path = data.getData();
             ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path,0);
+        }
+        else if(resultCode == RESULT_OK && requestCode == 100){
+            ((InterfazAccionFragments)this.listadoFragmentos[eleccion]).reiniciar();
         }
     }
 
@@ -364,7 +366,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     private void listaContactos(){
         try{
             Intent intent = new Intent(this, ActividadContactos.class);
-            startActivity(intent);
+            startActivityForResult(intent, 100);
         }catch(Exception e){
             Log.d("Pruebas", "-->" + e.getMessage());
         }

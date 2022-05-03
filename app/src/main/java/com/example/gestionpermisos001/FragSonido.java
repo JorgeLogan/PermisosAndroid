@@ -13,9 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import java.io.IOException;
 
 /**
  * create an instance of this fragment.
@@ -60,9 +58,8 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     public void setArchivo(Uri uri, int pos) {
         uriActual = uri;
         posicion = pos;
-        Log.d("Pruebas","\\\\\\\\ Uri pasado: " + uri.toString());
-
         uriActual = uri;
+
         try{
             mp.stop();
         }catch (Exception e){}
@@ -81,21 +78,17 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
             else { // Tenemos un id de recurso
                 //mp.release();
                 final int numId = Integer.parseInt(uri.toString());
-                //Log.d("Pruebas", " Intenta carfar rec sonico " + numId);
                 mp = MediaPlayer.create(contenedor.getContext(), numId);
             }
 
             mp.start();
             mp.seekTo(posicion);
 
-        } catch (Exception e) {
-            Log.d("Pruebas", "Excepcion al crear el nuevo media player " + e.getMessage());
-        }
+        } catch (Exception e) {}
     }
 
     @Override
     public void cerrarFragment() {
-        Log.d("Pruebas", "Cerrar fragment de sonido");
         try{
             if(mp!= null){
                 if (mp.isPlaying()){
@@ -105,6 +98,11 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
                 mp.release();
             }
         }catch(Exception e){}
+    }
+
+    @Override
+    public void reiniciar() {
+        this.setArchivo(uriActual, posicion);
     }
 
     // Para poder localizar un archivo del almacenamiento

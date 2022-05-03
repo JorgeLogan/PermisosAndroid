@@ -5,4 +5,5 @@ import android.net.Uri;
 public interface InterfazAccionFragments {
     public void setArchivo(Uri uri, int posicion);
     public void cerrarFragment();
+    public void reiniciar();
 }

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -44,8 +45,6 @@ public class ActividadContactos extends AppCompatActivity {
 
             RecyclerView lvContactos = (RecyclerView)findViewById(R.id.lvContactos);
 
-            if(lvContactos == null)Log.d("Pruebas", "No pudo cargar del xml el reciycler");
-
             // Comprobamos si tenemos permisos para mirar las llamadas
             this.comprobarPermisosLlamada();
             // Preparamos el adaptador de contactos
@@ -73,13 +72,12 @@ public class ActividadContactos extends AppCompatActivity {
             btnVolver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    onBackPressed();
+                    setResult(-1);
+                    finish();
                 }
             });
 
-        }catch (Exception e){
-            Log.d("Pruebas", "Error: " + e.getMessage());
-        }
+        }catch (Exception e){}
     }
 
     // Funcion para comprobar los permisos de llamada
@@ -159,16 +157,8 @@ public class ActividadContactos extends AppCompatActivity {
                         }
                     }
                 }
-
-
-            }catch(Exception e){
-                Log.d("Pruebas", "Error " + e.getMessage());
-            }
+            }catch(Exception e){}
         }
         Log.d("Pruebas", "He sacado " + contactos.size());
-    }
-
-    private void llamar(){
-
     }
 }

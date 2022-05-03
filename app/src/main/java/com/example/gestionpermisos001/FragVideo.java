@@ -115,6 +115,11 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
     }
 
     @Override
+    public void reiniciar() {
+        this.setArchivo(uriActual, posicion);
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         this.cerrarFragment();

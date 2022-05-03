@@ -75,6 +75,11 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         // No necesita nada
     }
 
+    @Override
+    public void reiniciar() {
+        this.setArchivo(uriActual, 0);
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
