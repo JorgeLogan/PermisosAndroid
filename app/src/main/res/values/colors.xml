@@ -14,6 +14,9 @@
     <color name="color_apagado">#0D2D4C</color>
     <color name="color_borde">#112233</color>
     <color name="color_fondo_marco">#012703</color>
-    <color name="color_marco">#00FFDA</color>
+    <color name="color_marco">#6F00A68E</color>
     <color name="color_monitor">#3CA51E</color>
+    <color name="color_fondo_contactos">#6F82FF5F</color>
+    <color name="color_vivo">#804CF626</color>
+    <color name="color_boton">#00939393</color>
 </resources>

@@ -28,24 +28,6 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
     private static Uri uriActual = null;
     private static int posicion = 0;
 
-    // Para cuando se cambie la actividad o se rote, guardamos los datos
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("Pruebas", "<-- <-- Se inicia onSaveInstanceState --> -->");
-        if(mp != null && outState!= null){
-            try{
-                outState.putString("uri", this.uriActual.toString());
-                outState.putInt("posicion", posicion);
-
-                Log.d("Pruebas","Guardados " + this.uriActual.toString() + " en la pos " + posicion);
-            }catch(Exception e){
-               Log.d("Pruebas","Error al cargar el frag de sonido: "
-                       + e.getMessage());
-            }
-        }
-    }
-
     // Constructor vacio
     public FragSonido() {
         // Required empty public constructor
@@ -67,16 +49,7 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         this.imgSonido = (ImageView) vista.findViewById(R.id.imgSonido);
         this.contenedor = container;
 
-        if(savedInstanceState!= null && savedInstanceState.containsKey("uri")){
-            uriActual = Uri.parse(savedInstanceState.getString("uri"));
-            posicion = savedInstanceState.getInt("posicion");
-
-            this.setArchivo(uriActual, posicion);
-            Log.d("Pruebas", "SI Se paso bundle al onCreate");
-        }else if(mp == null){
-            this.setArchivo(uriActual, 0);
-            Log.d("Pruebas", "NO Se paso bundle al onCreate");
-        }
+        this.setArchivo(uriActual, posicion);
 
         // Devolvemos la vista
         return vista;
@@ -84,7 +57,9 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
 
     // Para abrir un URI y que empiece a funcionar
     @Override
-    public void setArchivo(Uri uri, int posicion) {
+    public void setArchivo(Uri uri, int pos) {
+        uriActual = uri;
+        posicion = pos;
         Log.d("Pruebas","\\\\\\\\ Uri pasado: " + uri.toString());
 
         uriActual = uri;
