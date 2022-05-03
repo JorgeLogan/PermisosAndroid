@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="color_nombre">#000291</color>
-    <color name="color_telefono">#0E4C03</color>
+    <color name="color_telefono">#380045</color>
     <color name="color_fondo">#DFE67D</color>
     <color name="color_encendido">#3191EF</color>
     <color name="color_apagado">#0D2D4C</color>
@@ -16,7 +16,7 @@
     <color name="color_fondo_marco">#012703</color>
     <color name="color_marco">#6F00A68E</color>
     <color name="color_monitor">#3CA51E</color>
-    <color name="color_fondo_contactos">#6F82FF5F</color>
+    <color name="color_fondo_contactos">#3482FF5F</color>
     <color name="color_vivo">#804CF626</color>
     <color name="color_boton">#00939393</color>
 </resources>

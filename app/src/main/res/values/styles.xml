@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="estilo_textos_boton">
-        <item name="textFillColor">#26FF00</item>
+        <item name="textFillColor">@color/color_monitor</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
