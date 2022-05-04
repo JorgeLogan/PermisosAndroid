@@ -27,13 +27,17 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <FrameLayout
             android:layout_width="350dp"
-            android:layout_height="200dp"
-            android:id="@+id/lvContactos"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            android:layout_height="wrap_content"
+            android:background="@drawable/forma_redondeada_apagada">
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:id="@+id/lvContactos"
+                android:layout_margin="10dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        </FrameLayout>
 
     <Space
         android:layout_width="20dp"

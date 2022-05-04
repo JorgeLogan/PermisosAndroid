@@ -3,7 +3,7 @@ package com.example.gestionpermisos001;
 import androidx.recyclerview.widget.RecyclerView;
 
 /**
- * Clase para manejar la lista de contactos
+ * Clase entidad para manejar la lista de contactos
  */
 public class DTOContactos{
     // Atributos
@@ -19,24 +19,11 @@ public class DTOContactos{
         this.telefono = telefono;
     }
 
-    // Getters y Setters
+    // Getters (no necesitamos setters)
     public String getNombre(){
         return this.nombre;
     }
-
-    public void setNombre(String nombre){
-        this.nombre = nombre;
-    }
-
     public String getTelefono(){
         return this.telefono;
-    }
-
-    public void setTelefono(String telefono){
-        this.telefono = telefono;
-    }
-
-    public void asignarDatos(DTOContactos contacto) {
-
     }
 }

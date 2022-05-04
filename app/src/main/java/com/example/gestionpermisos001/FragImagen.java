@@ -15,21 +15,26 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import com.bumptech.glide.Glide;
 
+/**
+ * Clase para el Fragmento central de las imagenes
+ */
 public class FragImagen extends Fragment implements InterfazAccionFragments {
-
+    // Atributos
     private ImageView imgSalida;
     private static Uri uriActual = null;
 
-    public FragImagen() {
-        // Required empty public constructor
-    }
+    // Constructor vacio
+    public FragImagen() {}
 
 
+    // Metodo llamado en la creacion
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
+    // Metodo llamado al crear la vista
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,12 +52,14 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
         return vista;
     }
 
+
     // Aqui en las imagenes, no usamos el parametro de posicion
     @Override
     public void setArchivo(Uri uri, int posicion) {
         this.uriActual = uri;
         Bitmap bmp = null;
 
+        // Segun el uri, trabaja de una forma u otra
         try
         {
             if(uri.toString().contains("http")){
@@ -60,27 +67,31 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
             }
             else if(!uri.toString().contains("/")){ // Si es un recurso, solo es un numero, sin ruta
                 this.imgSalida.setImageResource(Integer.parseInt(uri.toString()));
-                this.imgSalida.setScaleType(ImageView.ScaleType.FIT_CENTER);
             }
             else{
             this.imgSalida.setImageURI(uri);
+            }
             this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
         }
         catch (Exception e) { }
     }
 
+
+    // Funcion para cerrar el fragment. La pide la interfaz, pero aqui no la necesito
     @Override
     public void cerrarFragment() {
         // No necesita nada
     }
 
+
+    // Ponemos al volver de los contactos, si esta este fragment seleccionado, la imagen que corresponde
     @Override
     public void reiniciar() {
         this.setArchivo(uriActual, 0);
     }
 
 
+    // Para el control de los permisos.
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {

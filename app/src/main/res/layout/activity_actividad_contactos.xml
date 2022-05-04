@@ -20,15 +20,17 @@
         android:layout_width="match_parent"
         android:layout_height="20dp"/>
 
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:id="@+id/lvContactos"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
+    <FrameLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/forma_redondeada_apagada">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/lvContactos"
+            android:layout_margin="10dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+    </FrameLayout>
     <Space
         android:layout_width="match_parent"
         android:layout_height="20dp"/>

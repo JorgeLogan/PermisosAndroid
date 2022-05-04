@@ -17,8 +17,7 @@ import android.widget.ImageButton;
  * En esta clase para controlar el cambio de opcion, uso el metodo de onSaveInstanceState
  */
 public class FragMenu extends Fragment {
-    private int opcion = 0;
-
+    private int opcion = 0; // Para saber que tengo activo al rehacer la interfaz
     private ImageButton imgImagen;
     private ImageButton imgVideo;
     private ImageButton imgSonido;
@@ -34,6 +33,7 @@ public class FragMenu extends Fragment {
         outState.putInt("opcion", opcion);
     }
 
+
     // Para cuando se crea la vista
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,6 +42,7 @@ public class FragMenu extends Fragment {
             this.opcion = savedInstanceState.getInt("opcion");
         }
     }
+
 
     // Para cuando se crea la vista
     @Override
@@ -84,8 +85,10 @@ public class FragMenu extends Fragment {
             }
         });
 
+        // Devolvemos la vista
         return vista;
     }
+
 
     /**
      * Para ajustar el encendido de los botones segun la opcion actual

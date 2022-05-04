@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 /**
- * Creo una clase para usar como los ArrayAdapter en los ListView.
+ * Creo una clase para usar como los ArrayAdapter de los ListView pero para un RecyclerView.
  * Su comportamiento es bastante mas complejo
  * Esta clase debe extender de RecyclerView.Adapter<T> siendo T una clase que creamos aqui mismo
  * y luego implementamos todos los metodos que nos pida.
@@ -21,11 +21,13 @@ public class AdaptadorContactosRV extends RecyclerView.Adapter<AdaptadorContacto
     Context contexto;
     ArrayList<DTOContactos> contactos;
 
+
     // Constructor
     public AdaptadorContactosRV(Context c, ArrayList<DTOContactos> contactos) {
         this.contexto = c;
         this.contactos = contactos;
     }
+
 
     /**
      * Funcion para crear la interfaz del elemento adaptador. Inflara un layout como cuando inflabamos
@@ -45,6 +47,7 @@ public class AdaptadorContactosRV extends RecyclerView.Adapter<AdaptadorContacto
         return new ViewHolder(contexto, vista);
     }
 
+
     /**
      * Establece la cominicacion con la clase creada, es decir, pasamos la onformacion del elemento
      * a pasar a la vista inflada del item ( lo que antes hacia en el getView)
@@ -56,10 +59,12 @@ public class AdaptadorContactosRV extends RecyclerView.Adapter<AdaptadorContacto
          holder.asignarDatos(contactos.get(position));
     }
 
+    // Para obtener el numero de contactos que tenemos
     @Override
     public int getItemCount() {
         return contactos.size();
     }
+
 
     /*********************************************************************************************
      * La clase creada para manejar los datos del adaptador

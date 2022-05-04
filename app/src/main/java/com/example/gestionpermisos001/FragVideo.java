@@ -18,6 +18,12 @@ import android.widget.VideoView;
 
 import androidx.appcompat.widget.ViewUtils;
 
+/**
+ * Para el fragment central de video
+ * Uso atributos estaticos, porque asi en esta clase la carga al rotar no necesitaria grabarse
+ * Al ser estatica la posicion y la uri, aunque cree el objeto de nuevo, los valores se mantienen
+ * y evito mas codigo y codigo. Y es otra forma de hacerlo, asi uso las dos
+ */
 public class FragVideo extends Fragment implements InterfazAccionFragments{
     private static VideoView vidSalida;
     private static Uri uriActual = null; // La hago static para que no se ponga a null cada vez
@@ -29,6 +35,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         // Required empty public constructor
     }
 
+
      /**
      * Metodo que se llama al crear el layout
      * @param savedInstanceState el conjunto de datos que puede recibir
@@ -37,6 +44,7 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
+
 
     /**
      * Metodo que crea la vista del layout
@@ -51,8 +59,11 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
         // Inflate the layout for this fragment
         View vista =  inflater.inflate(R.layout.fragment_video, container, false);
 
+        // Cargamos el videoview
         vidSalida = (VideoView)vista.findViewById(R.id.vidSalida);
 
+        // Si no tenemos uri, acabamos de arrancar la aplicacion, asi que le asigno una, y la
+        // posicion de inicio 0
         if(uriActual == null){
             // Cargara el video de recursos al iniciar
             String paquete = getActivity().getPackageName();
@@ -60,7 +71,6 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
             posicion = 0;
         }
 
-        vidSalida.requestFocus();
         this.setArchivo(uriActual, posicion);
 
         // Devolvemos la vista
@@ -69,18 +79,22 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
 
 
     /**
-     * Funcion para pasar un recurso al video del fragment
+     * Funcion para pasar un recurso al video del fragment y ponerlo en marcha
      * @param uri el recurso a colocar
      * @param pos la posicion del video
      */
     @Override
     public void setArchivo(Uri uri, int pos) {
+        // Ponemos los valores estaticos actualizados
         uriActual = uri;
         posicion = pos;
 
+        // Intentamos arrancar el video segun el tipo de uri que tenemos
         try{
+            // Primero, si esta funcionando, lo paro
             if(this.vidSalida.isPlaying())this.vidSalida.stopPlayback();
 
+            // Ahora compruebo el origen de la uri, para saber como funcionar con ella
             if(uri.toString().contains("/")){
                 this.vidSalida.setVideoURI(uri);
             }
@@ -89,11 +103,15 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
                         getPackageName() + "/" + uri.toString()));
             }
 
+            // pedimos el foco
             vidSalida.requestFocus();
 
+            // Nos ponemos en posicion, y empezamos el video
             vidSalida.seekTo(posicion);
             vidSalida.start();
-        }catch(Exception e){}
+        }catch(Exception e){
+            Log.d("Pruebas", "No se pudo cargar el video: " + e.getMessage());
+        }
     }
 
 
@@ -108,17 +126,16 @@ public class FragVideo extends Fragment implements InterfazAccionFragments{
             vidSalida.stopPlayback();
             vidSalida.resume();
         }
-
-        Bundle b = new Bundle();
-        b.putInt("posicion", posicion);
-        this.onSaveInstanceState(b);
     }
 
+    // Metodo para que al reiniciar, si el fragment esta activo, arranque en donde estaba antes.
+    // Se usa al volver de la otra actividad
     @Override
     public void reiniciar() {
         this.setArchivo(uriActual, posicion);
     }
 
+    // Metodo para cerar el fragment al invocar el onPause
     @Override
     public void onPause() {
         super.onPause();

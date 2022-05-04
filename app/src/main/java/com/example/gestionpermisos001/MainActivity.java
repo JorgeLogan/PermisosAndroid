@@ -28,27 +28,31 @@ import java.io.File;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 /**
- * Solo vamos a tener 1 actividad de momento, asi que de entrada, vamos a tener por defecto
+ * Solo vamos a tener 1 actividad para el control multimedia, y vamos a tener por defecto
  * el Fragment de imagen cargado.
  * Luego según los controles del mando, el fragment central se irá cambiando a video, sonido, o
  * vuelta a imagen segun el boton pulsado.
- * Debajo de
+ * Tambien tendremos un menu para acceder a la actividad de contactos de telefono, y un acerca de..
+ * sencillo, usando un dialogo simple para usar un poco de resumen de contenido. (usaremos uno
+ * personalizado para acceder a los elementos multimedia desde internet y los recursos)
+ *
  */
 public class MainActivity extends AppCompatActivity implements  InterfazFragments{
-
     // Para poder salir desde otra activity
     public static MainActivity instancia = null;
 
+    // Para el control de los permisos
     private final int PERMISO_GALERIA = 4;
-
     private final String[] PERMISOS = {Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.INTERNET, Manifest.permission.READ_CONTACTS};
 
-    private static int eleccion = 0; // Sera 0 para Imagen, 1 para Video y 2 para Sonido, Estatica para conservar la eleccion
+    // Para contolar la eleccion actual al reiniciar la vista
+    // Sera 0 para Imagen, 1 para Video y 2 para Sonido, Estatica para conservar la eleccion
+    private static int eleccion = 0;
     private String ruta ="";
 
-    // El contenedor de los fragmentos
+    // El contenedor de los fragmentos centrales
     private FrameLayout contenedorFragmentos;
 
     /**
@@ -59,6 +63,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      */
     private Fragment[] listadoFragmentos = new Fragment[3];
 
+
+    // Metodo llamado al crear la vista
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      */
 
     public void pedirPermisosGaleria(){
-        if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+        if(ActivityCompat.checkSelfPermission(MainActivity.this, READ_EXTERNAL_STORAGE)!=
+                PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(MainActivity.this, this.PERMISOS, this.PERMISO_GALERIA );
         }
     }
@@ -97,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      * Implementaciones de la interfaz
      * ********************************************************************************************
      */
+
     /**********************************************************************************************
      * Funcion para cargar el fragment central de elegir imagenes
      */
@@ -148,8 +156,10 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
      *  Funciones de seleccion de origen de datos
      * ***************************************************************************************
      */
+
     /**********************************************************************************************
      * Funcion para seleccionar elementos desde la galeria interna
+
      */
     @Override
     public void abrirGaleria() {
@@ -157,8 +167,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         Log.d("Pruebas", "Abrir galeria");
 
         // Por si es necesario, convocamos la funcion de pedir permisos runtime
-        // (si no lo necesita no los pedira)
-        this.pedirPermisosGaleria();
+         this.pedirPermisosGaleria();
 
         /**
          * Cuando se abre un dialogo de buscar archivos, el codigo de OK es RESULT_CODE = -1
@@ -197,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
             case 0: // Imagen desde Internet
                 Log.d("Pruebas", "Abrir imagen de internet");
 
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia ei1 = new DTOElementoMultimedia("Hommer",
                         DTOElementoMultimedia.tipoElemento.Imagen,
                         "https://imagenpng.com/wp-content/uploads/2015/09/imagenes-png.png");
@@ -211,18 +221,20 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
             case 1: // Video desde Internet
                 this.cargarFragment();
 
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia ev1 = new DTOElementoMultimedia("Rama",
                         DTOElementoMultimedia.tipoElemento.Video,
                         "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174");
                 DTOElementoMultimedia ev2 = new DTOElementoMultimedia("Misma rama",
                         DTOElementoMultimedia.tipoElemento.Video,
-                        "https://player.vimeo.com/external/498228565.hd.mp4?s=a32a9a677a152be823a5ca87d3765c208e36d8bc&profile_id=174");
+                        "https://github.com/JorgeLogan/PermisosAndroid/blob/develop/abuelo.mp4");
 
                 DTOElementoMultimedia listaElementosV[] = {ev1, ev2};
                 this.cargarListadoElementos(listaElementosV);
                 break;
             case 2: // Sonido desde internet
 
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia es1 = new DTOElementoMultimedia("Lluvia relajante",
                         DTOElementoMultimedia.tipoElemento.Sonido,
                         "https://www.freemusicprojects.com/mp3/Lluvia-1.mp3");
@@ -247,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
             case 0: // Imagen desde recursos
                 Log.d("Pruebas", "Intento abrir imagen desde la galeria");
 
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia ei1 = new DTOElementoMultimedia("Egroj",
                         DTOElementoMultimedia.tipoElemento.Imagen,
                         String.valueOf(R.raw.egroj));
@@ -270,6 +283,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 this.cargarListadoElementos(elementosI);
                 break;
             case 1: // Video desde recursos
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia ev1 = new DTOElementoMultimedia("Reel",
                         DTOElementoMultimedia.tipoElemento.Video,
                         String.valueOf(R.raw.mi_reel));
@@ -284,6 +298,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
                 this.cargarListadoElementos(elementosV);
                 break;
             case 2: // Sonido desde recursos
+                // Cargamos unos elementos para pasarlos a un listview personalizado de seleccion
                 DTOElementoMultimedia es1 = new DTOElementoMultimedia("Musica 1",
                         DTOElementoMultimedia.tipoElemento.Sonido,
                         String.valueOf(R.raw.musica));
@@ -304,17 +319,17 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("Pruebas", "Resultado -> " + requestCode + "  " + resultCode);
-        if(resultCode == RESULT_OK && requestCode!= 100){
+        if(resultCode == RESULT_OK && requestCode!= 100){ // Si recibimos una uri de un dialogo de seleccion
             Uri path = data.getData();
             ((InterfazAccionFragments)this.listadoFragmentos[this.eleccion]).setArchivo(path,0);
         }
-        else if(resultCode == RESULT_OK && requestCode == 100){
+        else if(resultCode == RESULT_OK && requestCode == 100){ // Es decir, volvemos de la actividad de contactos
             ((InterfazAccionFragments)this.listadoFragmentos[eleccion]).reiniciar();
         }
     }
 
     /**********************************************************************************************
-    Para cargar el fragment central segun la eleccion
+    Para cargar el fragment central segun la eleccio: imagen, video, sonido
      */
     private void cargarFragment(){
         // Ahora ya preparamos para cargar el nuevo fragment
@@ -326,8 +341,8 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
 
     /**********************************************************************************************
-     * Menu de llamadas a contactos
-     *
+     * Menu superior, donde podremos acceder a la activity de contactos, el acerca de..., o salir
+     * de la aplicacion
      * ********************************************************************************************
      */
     @Override
@@ -337,6 +352,11 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * Para el control del item seleccionado del menu superior
+     * @param item el item seleccionado
+     * @return devuelvo el mismo valor que devolveria el padre
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
@@ -354,6 +374,7 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         return super.onOptionsItemSelected(item);
     }
 
+
     // Para salir desde cualquier actividad
     public void salir(){
         finish();
@@ -361,7 +382,9 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
 
 
     /**********************************************************************************************
-     * Para la lista de contactos
+     * Para la lista de contactos creo un intent y llamo a su actividad
+     * Queremos que devuelva resultado, ya que al volver necesitamos que indique que el reproductor
+     * de video o sonido, arranquen donde estaban, o de lo contrario, se quedara detenido
      */
     private void listaContactos(){
         try{
@@ -370,12 +393,14 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
         }catch(Exception e){
             Log.d("Pruebas", "-->" + e.getMessage());
         }
-
     }
 
 
     /**********************************************************************************************
      * Para un alert dialog simple con un acerca de...
+     * Lo he creado simple para poder usar la activity de repaso de contenido visto, y layouts
+     * personalizados los tenemos para la busqueda de archivos (y contactos en la actividad de
+     * contctos con un RecyclerView)
      */
     private void acercaDe(){
         AlertDialog.Builder dialogo =  new AlertDialog.Builder(this);
@@ -393,20 +418,27 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     /**********************************************************************************************
      * Para poder hacer un listview personalizado y seleccionar una imagen de recursos o intenet
      * @param elementos los elementos DTOELementos
-     * @return
      */
     private void cargarListadoElementos(DTOElementoMultimedia[] elementos){
+        // Preparo un adaptador para el selector
         AdaptadorSelector selector = new AdaptadorSelector(getBaseContext(), R.layout.layout_seleccion, elementos);
+
+        // Creo un dialogo builder al que pasare el selector como adaptador personalizado
         AlertDialog.Builder dialogo = new AlertDialog.Builder(MainActivity.this);
         dialogo.setAdapter(selector, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                // Extraemos los datos del item seleccionado (i)
                 DTOElementoMultimedia elem = selector.getItem(i);
                 ruta = selector.getItem(i).getDatos();
 
+                // Usamos la intermfaz de los fragmentos, para poder castear e invocar el metodo
+                // en el que ejecutara el uri recogido
                 ((InterfazAccionFragments)listadoFragmentos[eleccion]).setArchivo(Uri.parse(ruta),0);
             }
         });
+
+        // Mostramos el dialogo
         dialogo.show();
     }
 }

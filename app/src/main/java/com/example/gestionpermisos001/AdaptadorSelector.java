@@ -13,9 +13,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * Adaptador para la seleccion de archivos al pulsar los botones de seleccionar archivo desde
+ * internet o los recursos (para galeria usa un intent especial con Content Values).
+ * Segun el tipo de archivo, hará que el imageview tenga la imagen que le corresponde, y cargara
+ * el nombre del archivo y su tipo segun los datos del DTOElementoMultimedia
+ */
 public class AdaptadorSelector extends ArrayAdapter<DTOElementoMultimedia> {
     private DTOElementoMultimedia[] listado;
     private Context contexto;
+
 
     /*
     Constructor basado en el padre.
@@ -27,6 +34,8 @@ public class AdaptadorSelector extends ArrayAdapter<DTOElementoMultimedia> {
         this.listado = objects;
     }
 
+
+    // Para obtener la vista y sus elementos
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

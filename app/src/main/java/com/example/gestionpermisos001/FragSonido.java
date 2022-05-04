@@ -16,15 +16,18 @@ import android.widget.ImageView;
 
 
 /**
- * create an instance of this fragment.
+ * Clase para el fragmento central de sonido. Incorporo un listener para hacerlo con carga
+ * asincrona para cuando lee desde almacenamiento interno o desde internet.
+ * Desde recursos internos no lo necesita (da error al prepararlo)
  */
-public class FragSonido extends Fragment implements InterfazAccionFragments {
+public class FragSonido extends Fragment implements InterfazAccionFragments, MediaPlayer.OnPreparedListener {
+    // Atributos
     private ViewGroup contenedor;
     private ImageView imgSonido;
     private static MediaPlayer mp = null;
-
     private static Uri uriActual = null;
     private static int posicion = 0;
+
 
     // Constructor vacio
     public FragSonido() {
@@ -33,12 +36,15 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         this.posicion = 0;
     }
 
+
     // Nos vale para la creacion y la recuperacion de la vista
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+
+    // Nos vale para la creacion y la recuperacion de la vista
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +53,7 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         this.imgSonido = (ImageView) vista.findViewById(R.id.imgSonido);
         this.contenedor = container;
 
+        // Ponemos el archivo que tenemos en la uri a sonar en la posicion adecuada
         this.setArchivo(uriActual, posicion);
 
         // Devolvemos la vista
@@ -60,20 +67,25 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         posicion = pos;
         uriActual = uri;
 
+        // Por si esta sonando, intentamos pararlo. No necesito mensaje de excepcion para esto
         try{
             mp.stop();
         }catch (Exception e){}
 
+        // Ahora intentamos crear un nuevo media player, y cargar la uri teniendo en cuenta sus
+        // origenes
         try {
             mp = new MediaPlayer();
 
             if (uri.toString().contains("http")) { // Buscamos desde internet
                 mp.setDataSource(uri.toString());
-                mp.prepare();
+                mp.prepareAsync();
+                mp.setOnPreparedListener(this);
             }
             else if (uri.toString().contains("/")) { // Buscamos desde una ruta
                 mp.setDataSource(this.getArchivo(uri));
-                mp.prepare();
+                mp.prepareAsync();
+                mp.setOnPreparedListener(this);
             }
             else { // Tenemos un id de recurso
                 //mp.release();
@@ -81,12 +93,17 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
                 mp = MediaPlayer.create(contenedor.getContext(), numId);
             }
 
+            // Empezamos la reproduccion y lo ponemos en posicion
             mp.start();
             mp.seekTo(posicion);
 
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            Log.d("Pruebas", "Error al intentar sacar el archivo de sonido: " + e.getMessage());
+        }
     }
 
+
+    // Metodo para cerrar el fragment y que no siga sonando
     @Override
     public void cerrarFragment() {
         try{
@@ -97,15 +114,16 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
                 }
                 mp.release();
             }
-        }catch(Exception e){}
+        }catch(Exception e){} // No necesito feedback si da error
     }
 
+
+    // Funcion de la interfaz para reiniciar el sonido cuando vuelva de otra actividad
     @Override
     public void reiniciar() {
         this.setArchivo(uriActual, posicion);
     }
 
-    // Para poder localizar un archivo del almacenamiento
 
     /**
      * Para poder localizar un archivo del almacenamiento, el uri por si solo no vale porque da error
@@ -135,10 +153,18 @@ public class FragSonido extends Fragment implements InterfazAccionFragments {
         return resultado;
     }
 
+
     // Para que no siga sonando al cambiar
     @Override
     public void onPause() {
         super.onPause();
         this.cerrarFragment();
+    }
+
+
+    // Para la carga asincrona cuando se lee desde internet o desde el almancenamiento
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        mediaPlayer.start();
     }
 }

@@ -27,11 +27,14 @@ import java.util.List;
 
 /**
  * Clase para manejar la lista de contactos
+ * La lista la hago estatica para intentar evitar reconteo al rotar el movil
+ * En mi caso, como tengo muchos, se ralentiza cosa fina
  */
 public class ActividadContactos extends AppCompatActivity {
     private final int PERMISO_LEER_CONTACTOS = 100;
-    private List<DTOContactos> contactos = new ArrayList<>();
+    private static List<DTOContactos> contactos = new ArrayList<>();
 
+    // Metodo que se ejecuta al crear la vista
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,18 +46,21 @@ public class ActividadContactos extends AppCompatActivity {
             Button btnVolver = (Button)findViewById(R.id.btnContactosVolver);
             Button btnSalir = (Button)findViewById(R.id.btnContactosSalir);
 
+            // Cargamos el recycler
             RecyclerView lvContactos = (RecyclerView)findViewById(R.id.lvContactos);
 
             // Comprobamos si tenemos permisos para mirar las llamadas
             this.comprobarPermisosLlamada();
-            // Preparamos el adaptador de contactos
-            sacarContactos();
+            // Preparamos el adaptador de contactos si esta vacio. Si ya tiene evitamos la carga
+            if(contactos.size() == 0) sacarContactos();
 
+            // Si no hay contactos lo mostramos
             if(this.contactos ==null || this.contactos.size() == 0)
                 Toast.makeText(this, "No saco contactos", Toast.LENGTH_SHORT).show();
             else
                 Toast.makeText(this, "Contactos: " + contactos.size(), Toast.LENGTH_SHORT).show();
 
+            // Fijamos el tamaño y pasamos los contactos a un adaptador
             lvContactos.setHasFixedSize(true); // Para que no cambie de tamaño
             AdaptadorContactosRV adaptadorRv = new AdaptadorContactosRV(this, (ArrayList<DTOContactos>) contactos);
             lvContactos.setAdapter(adaptadorRv);
@@ -72,7 +78,7 @@ public class ActividadContactos extends AppCompatActivity {
             btnVolver.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setResult(-1);
+                    setResult(-1); // El resultado -1 indica que fue bien
                     finish();
                 }
             });
@@ -88,18 +94,6 @@ public class ActividadContactos extends AppCompatActivity {
             ActivityCompat.requestPermissions(ActividadContactos.this,
                     new String[] { Manifest.permission.READ_CONTACTS}, PERMISO_LEER_CONTACTOS );
         }
-    }
-
-
-    // Funcion para hacer pruebas de layouts antes de conseguir sacar los contactos
-    private void crearListadoPrueba(){
-        DTOContactos[] contactos = new DTOContactos[6];
-        contactos[0] = new DTOContactos("Mary",  "123456");
-        contactos[1] = new DTOContactos("Jorge", "78l910");
-        contactos[2] = new DTOContactos("Logan", "112213");
-        contactos[3] = new DTOContactos("Lunina",  "123456");
-        contactos[4] = new DTOContactos("Gruño", "78l910");
-        contactos[5] = new DTOContactos("Yaki y Canelo", "112213");
     }
 
 
@@ -130,7 +124,6 @@ public class ActividadContactos extends AppCompatActivity {
                 if(cursor.getCount()>0){
                     while(cursor.moveToNext()){
 
-
                         // El id y el nombre se sacan de forma "directa"
                         // Veremos que en la busqueda, tenemos @Suppresslint.. obliga el IDE a ponerlo
                         id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
@@ -147,9 +140,10 @@ public class ActividadContactos extends AppCompatActivity {
                                 null, seleccion, new String[]{id}, null,null);
 
                         // Comprobamos que el contacto tenia numero
-                        if(cursorTel!= null && cursor.getCount() > 0){
+                        if(cursorTel!= null && cursorTel.getCount() > 0){
                             cursorTel.moveToFirst();
-                            numero = cursorTel.getString(cursorTel.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                            numero = cursorTel.getString(cursorTel.getColumnIndex
+                                    (ContactsContract.CommonDataKinds.Phone.NUMBER));
                         }
                         if(nombre!= null && numero!= null){
                             contactos.add(new DTOContactos(nombre, numero));
