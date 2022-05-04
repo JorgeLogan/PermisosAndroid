@@ -1,12 +1,15 @@
 package com.example.gestionpermisos001;
 
+import android.graphics.drawable.TransitionDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.transition.Transition;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 
 
@@ -46,9 +49,7 @@ public class FragmentOrigen extends Fragment {
 
         this.btnGaleria.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                ((InterfazFragments)getActivity()).abrirGaleria();
-            }
+            public void onClick(View view)  { ((InterfazFragments)getActivity()).abrirGaleria();  }
         });
 
         this.btnWWW.setOnClickListener(new View.OnClickListener() {
