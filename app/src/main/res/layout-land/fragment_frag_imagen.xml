@@ -11,10 +11,11 @@
     <!-- TODO: Update blank fragment layout -->
     <ImageView
         android:id="@+id/imgSalida"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_width="380dp"
+        android:layout_height="230dp"
         android:layout_gravity="center"
         android:background="#00FFFFFF"
-        android:scaleType="fitCenter"
+        android:contentDescription="@string/imagen"
+        android:scaleType="centerInside"
         android:src="@drawable/ic_launcher_background" />
 </FrameLayout>

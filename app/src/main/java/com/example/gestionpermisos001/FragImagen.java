@@ -71,7 +71,7 @@ public class FragImagen extends Fragment implements InterfazAccionFragments {
             else{
             this.imgSalida.setImageURI(uri);
             }
-            this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            this.imgSalida.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         }
         catch (Exception e) { }
     }

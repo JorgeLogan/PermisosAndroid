@@ -3,9 +3,12 @@
     package="com.example.gestionpermisos001">
     <!-- Permisos para el almacenamiento -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- Permisos para acceder a la agegda de contactos -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" /> <!-- Permisos para Internet -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- Permisos para modo sleeping -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Permisos para acceder a la agegda de contactos -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- Permisos para Internet -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Permisos para modo sleeping -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application

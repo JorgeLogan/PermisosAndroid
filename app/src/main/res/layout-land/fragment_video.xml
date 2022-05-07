@@ -10,8 +10,8 @@
 
     <VideoView
         android:id="@+id/vidSalida"
-        android:layout_width="330dp"
-        android:layout_height="220dp"
+        android:layout_width="380dp"
+        android:layout_height="230dp"
         android:background="#00FFFFFF" />
 
 </FrameLayout>

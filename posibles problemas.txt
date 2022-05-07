@@ -1,0 +1,3 @@
+En el caso de que no puedas abrirlo, lo tengo en github en abierto para evitar problemas
+
+https://github.com/JorgeLogan/PermisosAndroid

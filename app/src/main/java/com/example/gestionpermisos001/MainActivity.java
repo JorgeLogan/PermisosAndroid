@@ -194,7 +194,10 @@ public class MainActivity extends AppCompatActivity implements  InterfazFragment
     }
 
     /**********************************************************************************************
-     * Funcion para seleccionar desde internet
+     * Funcion para seleccionar desde internet.
+     * En el caso del video, puse 2 veces el mismo porque no logre encontrar otro enlace a un video
+     * que funcionara. Te lo comente por Teams, pero como tenias lio, y yo tambien estoy saturado,
+     * lo dejo doble. Al final, es cambiar la url por una de internet que sea valida
      */
     @Override
     public void abrirWWW() {
