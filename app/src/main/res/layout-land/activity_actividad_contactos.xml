@@ -2,67 +2,69 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ActividadContactos"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/fondo_aluminio"
+    android:gravity="center|center_horizontal"
     android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:theme="@style/Theme.miEstilo"
-    android:background="@drawable/fondo_aluminio">
+    tools:context=".ActividadContactos">
 
     <TextView
         style="@style/estilo_textos_boton"
-        android:textColor="@color/color_fondo"
         android:text="@string/lista_contactos"
+        android:textColor="@color/color_fondo"
         android:textSize="24sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 
     <Space
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="10dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <FrameLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:background="@drawable/forma_redondeada_apagada">
+
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
                 android:id="@+id/lvContactos"
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
                 android:layout_margin="10dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </FrameLayout>
 
-    <Space
-        android:layout_width="20dp"
-        android:layout_height="20dp"/>
+        <Space
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:orientation="vertical">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnContactosVolver"
-            android:text="@string/volver"/>
+            <Button
+                android:id="@+id/btnContactosVolver"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/volver" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnContactosSalir"
-            android:text="@string/salir"/>
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="50dp" />
+
+            <Button
+                android:id="@+id/btnContactosSalir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/salir" />
 
         </LinearLayout>
     </LinearLayout>

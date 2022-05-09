@@ -1,0 +1,165 @@
+[33mcommit 27397792b1cae3ff7fe26b03b6c6ac03fc0aa3ff[m[33m ([m[1;36mHEAD -> [m[1;32mdevelop[m[33m, [m[1;31morigin/develop[m[33m)[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Sat May 7 10:01:43 2022 +0200
+
+    TERMINADO
+
+[33mcommit eea2775de30324886e107e4c7fb48b4dfa198308[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed May 4 12:55:07 2022 +0200
+
+    Doy por finalizado el ejercicio. No he encontrado otro recurso de video, pero esta correcto
+
+[33mcommit 1bb1157bb39c60842da5f65898a2ae68f7fbf599[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed May 4 11:09:10 2022 +0200
+
+    Subiendo video para probar desde github
+
+[33mcommit 0d8d84750c9ce8c27ec8ce59aa84188796d2e406[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 23:39:51 2022 +0200
+
+    Terminado 90x100. Falta pulir detalles de codigo
+
+[33mcommit ab35f6d65d7eb02d053bb2d6dc525c7f03b073bf[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 23:19:04 2022 +0200
+
+    Reparando interfaz
+
+[33mcommit 2259be018f54d0cee66d0423b470eeb2a7c8eae7[m[33m ([m[1;32mdev2[m[33m)[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 23:02:33 2022 +0200
+
+    Mejorada interfaz y bugs
+
+[33mcommit 4cfc09997d47309004648e2cbd7aa796777611d2[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 22:35:45 2022 +0200
+
+    Solucionado todo en act1. No activa audio al volver de la 2
+
+[33mcommit 890965824bc88c5c2a1d3f18411b865701c52ac5[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 22:06:55 2022 +0200
+
+    Video OK. Keda imagen, y quitar codigo basura
+
+[33mcommit d56a890ca0c5c12ebff3599669bde50199077a66[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 21:36:22 2022 +0200
+
+    Ajustando posicion de video. Sonido OK
+
+[33mcommit be191deb542ab4e41018db876d2c6b3222649fa2[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 18:19:26 2022 +0200
+
+    Solucionada rot en menu y audio Queda imagen y video
+
+[33mcommit 54d24684aca77d248e01aecbe86f170ce48d2883[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 16:01:19 2022 +0200
+
+    Ahora si ke borro todo
+
+[33mcommit 567490d18bc899fd07a20192f3826fce7903a188[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue May 3 12:47:25 2022 +0200
+
+    Toca borrar medio fragment de sonido para intentar ajustar bundles
+
+[33mcommit 3615752606e4caaacbf0b2071211b857be095176[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Thu Apr 28 13:57:22 2022 +0200
+
+    Elimino fuentes que no uso y cambio tam de un archivo
+
+[33mcommit b536da27dcc2825274c7dd50e28a512716c2f313[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Thu Apr 28 11:45:33 2022 +0200
+
+    Actualizada interfaz. Necesito corregir cambio menu
+
+[33mcommit 236b4fa66d3f71fe5bc7347133168521a9639384[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 27 19:23:46 2022 +0200
+
+    Creados layouts para landscape y agregados recursos
+
+[33mcommit b29c23dfff49e6db3c45d830fc4ce5b967cfccfc[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 27 15:35:02 2022 +0200
+
+    Ajuste de tam de recursos
+
+[33mcommit 81099ea6a074147c15e0979cd37f42038f081666[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 27 13:30:52 2022 +0200
+
+    Ajustado con menus de recursos e internet.
+
+[33mcommit f60fe139cdb7d0c7a7687f8da1a73da768001d18[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 27 10:28:08 2022 +0200
+
+    Recicler view con imagenes y videos reducidos
+
+[33mcommit a332ccf7ff1fb4bbd0cdeffae1de9842b0d7b431[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 20 17:39:50 2022 +0200
+
+    subi recursos mios para hacer cambios
+
+[33mcommit f5db7bd1194440e01e626b43cd1ff867638d1557[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 20 16:46:06 2022 +0200
+
+    Arreglado el recycler view. Por alguna razon no acepta drawables de formas, y era el problema que tenia
+
+[33mcommit 21a20ac05a04c2910f00990ee97f8229f3a5020f[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 20 15:39:50 2022 +0200
+
+    Intentando cambiar ListView por recycler view, pero no me lo acepta
+
+[33mcommit 672b5da602b6e9ac92b234f7221ec7d565757240[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue Apr 19 21:50:39 2022 +0200
+
+    Mejorando la interfaz.
+
+[33mcommit 2626cf581fdb121ea41e63538d79ad2225c9a2f7[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Tue Apr 19 17:12:17 2022 +0200
+
+    En TEORIA funciona, pero no estoy seguro que coja los elementos de forma distinta de la galeria a de la SD
+    
+    Tambien me sale de la aplicacion al pasar rapido la lista de contactos (tengo demasiados)
+
+[33mcommit febaca326ed57e596bce9e20715cf2ea115ba506[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Sat Apr 16 14:51:23 2022 +0200
+
+    No funciona cargar video desde internet (tiene el manifest ok)
+    
+    El sonido va mal desde todos lados menos desde recursos
+
+[33mcommit b1d0253f0bd2efb7aae64485352c7d3e3265f155[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Thu Apr 7 10:06:36 2022 +0200
+
+    proyecto iniciado
+
+[33mcommit a8e3183c2ee5d0b19463e1c11d8d9b9bec0960d6[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Thu Apr 7 10:06:15 2022 +0200
+
+    proyecto iniciado
+
+[33mcommit def2686d31d7d658510131bf25e93022fcac217d[m
+Author: JorgeLogan <jorgeacenal@gmail.com>
+Date:   Wed Apr 6 11:00:49 2022 +0200
+
+    Inicio de proyecto.
